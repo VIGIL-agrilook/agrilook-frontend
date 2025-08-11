@@ -24,7 +24,10 @@ export default function Navigation() {
             <div className="w-8 h-8 bg-farm-orange rounded-full flex items-center justify-center">
               <span className="text-white text-sm font-bold">들</span>
             </div>
-            <span className="text-xl font-bold">들여다밭</span>
+            <div className="flex items-center space-x-2">
+              <span className="text-xl font-bold">들여다밭</span>
+              <span className="text-sm text-gray-400">올인원 토양·침입자 관리 플랫폼</span>
+            </div>
           </Link>
 
           {/* 네비게이션 메뉴 */}

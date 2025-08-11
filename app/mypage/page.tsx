@@ -11,6 +11,8 @@ export default function MyPage() {
   const [farmAddress, setFarmAddress] = useState('구리시 교문동 486')
   const [selectedCrops, setSelectedCrops] = useState(['오이', '토마토', '배추'])
   const [showAddressDialog, setShowAddressDialog] = useState(false)
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
+  const [showDeleteAccountDialog, setShowDeleteAccountDialog] = useState(false)
 
   const availableCrops = [
     '오이', '토마토', '배추', '상추', '시금치', '무', '당근', '감자', '고구마', '옥수수'
@@ -164,6 +166,67 @@ export default function MyPage() {
               <p className="text-sm text-gray-600">
                 계정 정보 변경은 고객센터로 문의해주세요.
               </p>
+              
+              {/* 계정 관리 버튼들 */}
+              <div className="flex gap-3 pt-4 border-t">
+                <Dialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant="outline"
+                      className="flex-1 border-farm-brown text-farm-brown hover:bg-farm-brown hover:text-white"
+                    >
+                      로그아웃
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>로그아웃</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <p className="text-center text-gray-600">
+                        관리자에게 문의해주세요.
+                      </p>
+                      <div className="flex justify-center">
+                        <Button 
+                          onClick={() => setShowLogoutDialog(false)}
+                          className="bg-farm-orange hover:bg-farm-orange/90 text-white"
+                        >
+                          확인
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+
+                <Dialog open={showDeleteAccountDialog} onOpenChange={setShowDeleteAccountDialog}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant="outline"
+                      className="flex-1 border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                    >
+                      계정 삭제
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>계정 삭제</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <p className="text-center text-gray-600">
+                        관리자에게 문의해주세요.
+                      </p>
+                      <div className="flex justify-center">
+                        <Button 
+                          onClick={() => setShowDeleteAccountDialog(false)}
+                          className="bg-farm-orange hover:bg-farm-orange/90 text-white"
+                        >
+                          확인
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </CardContent>
           </Card>
         </div>

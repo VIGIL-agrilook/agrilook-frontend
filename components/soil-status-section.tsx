@@ -10,10 +10,10 @@ interface SoilStatusSectionProps {
 export default function SoilStatusSection({ isPremium, onUpgrade }: SoilStatusSectionProps) {
   const soilData = [
     { name: 'pH', value: isPremium ? '6.2' : '5.5-7.0', status: 'normal', unit: '' },
-    { name: 'EC', value: isPremium ? '1.8' : '1.0-2.0', status: 'normal', unit: 'dS/m' },
-    { name: 'Ca', value: isPremium ? '245' : '200-300', status: 'normal', unit: 'ppm' },
-    { name: 'Mg', value: isPremium ? '89' : '50-100', status: 'high', unit: 'ppm' },
-    { name: 'OC', value: isPremium ? '2.1' : '1.5-3.0', status: 'normal', unit: '%' }
+    { name: 'EC', value: isPremium ? '1.8' : '1.0-2.0', status: 'normal', unit: '[dS/m]' },
+    { name: 'Ca', value: isPremium ? '245' : '200-300', status: 'normal', unit: '[ppm]' },
+    { name: 'Mg', value: isPremium ? '89' : '50-100', status: 'high', unit: '[ppm]' },
+    { name: 'OC', value: isPremium ? '2.1' : '1.5-3.0', status: 'normal', unit: '[%]' }
   ]
 
   const getStatusColor = (status: string) => {

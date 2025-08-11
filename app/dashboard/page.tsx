@@ -23,7 +23,7 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold text-farm-brown mb-8">대시보드</h1>
         
         {/* 3행 2열 그리드 */}
-        <div className="grid grid-cols-2 grid-rows-3 gap-6 h-[700px]">
+        <div className="grid grid-cols-2 grid-rows-[200px_450px_350px] gap-6 h-[1100px]">
           {/* 섹션 1: 토양 상태 (1행 전체) */}
           <div className="col-span-2">
             <SoilStatusSection 
