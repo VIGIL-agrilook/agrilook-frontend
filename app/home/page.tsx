@@ -83,14 +83,12 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-farm-light-green">
+    <div className="min-h-screen bg-background">
       <Navigation />
       
-
-        <main className="container mx-auto px-4 py-8">
-
+      <div className="container mx-auto py-8 space-y-6">
         {/* 3D 모델과 오버레이 카드들 */}
-        <div className="relative h-[800px] bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="relative h-[800px] bg-card rounded-lg shadow-lg overflow-hidden">
           {/* 3D 모델 배경 */}
           <Farm3DViewer className="w-full h-full" />
           
@@ -110,7 +108,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </main>
+      </div>
 
       <FloatingChatButton />
     </div>

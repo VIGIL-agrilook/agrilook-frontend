@@ -8,18 +8,18 @@ export default function CropSection() {
   ]
 
   return (
-    <Card className="bg-white h-full">
+    <Card className="bg-card h-full">
       <CardHeader>
-        <CardTitle className="text-farm-brown">내 작물</CardTitle>
+        <CardTitle className="text-foreground">내 작물</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {crops.map((crop) => (
-            <div key={crop.name} className="flex items-center space-x-3 p-3 bg-farm-light-green rounded-lg">
+            <div key={crop.name} className="flex items-center space-x-3 p-3 bg-secondary rounded-lg">
               <span className="text-2xl">{crop.icon}</span>
               <div>
-                <div className="font-semibold text-farm-brown">{crop.name}</div>
-                <div className="text-sm text-gray-600">{crop.status}</div>
+                <p className="font-semibold text-foreground">{crop.name}</p>
+                <p className="text-sm text-muted-foreground">{crop.info}</p>
               </div>
             </div>
           ))}

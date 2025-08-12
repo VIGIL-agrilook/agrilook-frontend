@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 export default function IntroPage() {
@@ -27,7 +27,7 @@ export default function IntroPage() {
   }
 
   return (
-    <div className="min-h-screen bg-farm-cream flex items-center justify-center p-4">
+    <div className="min-h-screen bg-farm-light-green-bg flex items-center justify-center p-4">
       <div className="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         
         {/* 왼쪽: 브랜드 섹션 */}
@@ -60,9 +60,10 @@ export default function IntroPage() {
 
         {/* 오른쪽: 로그인 섹션 */}
         <div className="flex justify-center">
-          <Card className="w-full max-w-md bg-white shadow-xl">
+          <Card className="w-full max-w-md bg-card shadow-xl">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl text-farm-brown">로그인</CardTitle>
+              <CardTitle className="text-2xl text-foreground">로그인</CardTitle>
+              <CardDescription className="text-muted-foreground">계정으로 계속 진행하세요</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -94,7 +95,7 @@ export default function IntroPage() {
               <div className="space-y-3 pt-4">
                 <Button 
                   onClick={handleLogin}
-                  className="w-full bg-farm-brown hover:bg-farm-brown/90 text-white"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                   로그인
                 </Button>
@@ -102,7 +103,7 @@ export default function IntroPage() {
                 <Button 
                   onClick={handleSignup}
                   variant="outline"
-                  className="w-full border-farm-brown text-farm-brown hover:bg-farm-brown hover:text-white"
+                  className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                 >
                   회원가입
                 </Button>

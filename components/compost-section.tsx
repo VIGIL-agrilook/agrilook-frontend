@@ -2,9 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function CompostSection() {
   return (
-    <Card className="bg-white h-full">
+    <Card className="bg-card h-full">
       <CardHeader>
-        <CardTitle className="text-farm-brown">퇴비 관리</CardTitle>
+        <CardTitle className="text-foreground">퇴비 관리</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
@@ -13,9 +13,9 @@ export default function CompostSection() {
             alt="퇴비"
             className="w-full h-20 object-cover rounded"
           />
-          <div className="p-3 bg-farm-light-green rounded-lg">
-            <h4 className="font-semibold text-farm-brown mb-2">퇴비 추천</h4>
-            <p className="text-sm text-gray-700">
+          <div className="p-3 bg-secondary rounded-lg">
+            <h4 className="font-semibold text-foreground mb-2">퇴비 추천</h4>
+            <p className="text-sm text-muted-foreground">
               우분 퇴비 - 2톤/10a<br/>
               계분 퇴비 - 1.5톤/10a<br/>
               적용 시기: 파종 2주 전

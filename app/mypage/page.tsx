@@ -32,21 +32,21 @@ export default function MyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-farm-light-green">
+    <div className="min-h-screen bg-background">
       <Navigation />
       
       <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <h1 className="text-3xl font-bold text-farm-brown mb-8">마이페이지</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-8">마이페이지</h1>
         
         <div className="space-y-6">
           {/* 농지 주소 수정 */}
-          <Card className="bg-white">
+          <Card className="bg-card">
             <CardHeader>
-              <CardTitle className="text-farm-brown">농지 정보</CardTitle>
+              <CardTitle className="text-foreground">농지 정보</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-farm-brown mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2">
                   현재 농지 주소
                 </label>
                 <div className="flex gap-2">
@@ -57,7 +57,7 @@ export default function MyPage() {
                   />
                   <Dialog open={showAddressDialog} onOpenChange={setShowAddressDialog}>
                     <DialogTrigger asChild>
-                      <Button className="bg-farm-orange hover:bg-farm-orange/90 text-white">
+                      <Button className="bg-primary text-primary-foreground">
                         주소 수정
                       </Button>
                     </DialogTrigger>
@@ -83,7 +83,7 @@ export default function MyPage() {
                           </Button>
                           <Button 
                             onClick={handleAddressUpdate}
-                            className="bg-farm-orange hover:bg-farm-orange/90 text-white"
+                            className="bg-primary text-primary-foreground"
                           >
                             변경 요청
                           </Button>
@@ -97,20 +97,20 @@ export default function MyPage() {
           </Card>
 
           {/* 작물 수정 */}
-          <Card className="bg-white">
+          <Card className="bg-card">
             <CardHeader>
-              <CardTitle className="text-farm-brown">재배 작물 관리</CardTitle>
+              <CardTitle className="text-foreground">재배 작물 관리</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-farm-brown mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2">
                   현재 재배 중인 작물
                 </label>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {selectedCrops.map((crop) => (
                     <span 
                       key={crop}
-                      className="bg-farm-cream text-farm-brown px-3 py-1 rounded-full text-sm"
+                      className="bg-secondary text-foreground px-3 py-1 rounded-full text-sm"
                     >
                       {crop}
                     </span>
@@ -119,7 +119,7 @@ export default function MyPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-farm-brown mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2">
                   작물 선택
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -131,33 +131,33 @@ export default function MyPage() {
                         onChange={() => handleCropToggle(crop)}
                         className="rounded border-gray-300"
                       />
-                      <span className="text-sm text-farm-brown">{crop}</span>
+                      <span className="text-sm text-foreground">{crop}</span>
                     </label>
                   ))}
                 </div>
               </div>
               
-              <Button className="bg-farm-orange hover:bg-farm-orange/90 text-white">
+              <Button className="bg-primary text-primary-foreground">
                 작물 정보 저장
               </Button>
             </CardContent>
           </Card>
 
           {/* 계정 정보 */}
-          <Card className="bg-white">
+          <Card className="bg-card">
             <CardHeader>
-              <CardTitle className="text-farm-brown">계정 정보</CardTitle>
+              <CardTitle className="text-foreground">계정 정보</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-farm-brown mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     사용자명
                   </label>
                   <Input value="농부김씨" readOnly />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-farm-brown mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     이메일
                   </label>
                   <Input value="farmer@example.com" readOnly />
@@ -168,12 +168,12 @@ export default function MyPage() {
               </p>
               
               {/* 계정 관리 버튼들 */}
-              <div className="flex gap-3 pt-4 border-t">
+              <div className="flex gap-3">
                 <Dialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
                   <DialogTrigger asChild>
                     <Button 
                       variant="outline"
-                      className="flex-1 border-farm-brown text-farm-brown hover:bg-farm-brown hover:text-white"
+                      className="flex-1 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                     >
                       로그아웃
                     </Button>
@@ -189,7 +189,7 @@ export default function MyPage() {
                       <div className="flex justify-center">
                         <Button 
                           onClick={() => setShowLogoutDialog(false)}
-                          className="bg-farm-orange hover:bg-farm-orange/90 text-white"
+                          className="bg-primary text-primary-foreground"
                         >
                           확인
                         </Button>
@@ -218,7 +218,7 @@ export default function MyPage() {
                       <div className="flex justify-center">
                         <Button 
                           onClick={() => setShowDeleteAccountDialog(false)}
-                          className="bg-farm-orange hover:bg-farm-orange/90 text-white"
+                          className="bg-primary text-primary-foreground"
                         >
                           확인
                         </Button>

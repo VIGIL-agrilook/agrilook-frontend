@@ -16,17 +16,17 @@ export default function Navigation() {
   ]
 
   return (
-    <nav className="bg-farm-brown text-farm-cream shadow-lg">
+    <nav className="bg-white text-foreground border-b">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* 로고 */}
           <Link href="/home" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-farm-orange rounded-full flex items-center justify-center">
-              <span className="text-white text-sm font-bold">들</span>
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <span className="text-primary-foreground text-sm font-bold">들</span>
             </div>
             <div className="flex items-center space-x-2">
               <span className="text-xl font-bold">들여다밭</span>
-              <span className="text-sm text-gray-400">올인원 토양·침입자 관리 플랫폼</span>
+              <span className="text-sm text-muted-foreground">올인원 토양·침입자 관리 플랫폼</span>
             </div>
           </Link>
 
@@ -37,8 +37,8 @@ export default function Navigation() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'hover:text-farm-orange transition-colors',
-                  pathname === item.href && 'text-farm-orange font-semibold'
+                  'hover:text-primary transition-colors',
+                  pathname === item.href && 'text-primary font-semibold'
                 )}
               >
                 {item.label}

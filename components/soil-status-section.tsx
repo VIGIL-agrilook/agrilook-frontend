@@ -35,9 +35,9 @@ export default function SoilStatusSection({ isPremium, onUpgrade }: SoilStatusSe
   }
 
   return (
-    <Card className="bg-white h-full">
+    <Card className="bg-card h-full">
       <CardHeader>
-        <CardTitle className="text-farm-brown">토양 상태</CardTitle>
+        <CardTitle className="text-foreground">토양 상태</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-5 gap-4 mb-6">

@@ -61,10 +61,10 @@ const config: Config = {
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
   			},
-        'farm-brown': '#443627',
-        'farm-orange': '#D98324',
-        'farm-cream': '#EFDCAB',
-        'farm-light-green': '#F2F6D0',
+        'farm-green': '#4CA154',
+        'farm-light-green-bg': '#F0FCF2', 
+        'farm-gray-bg': '#F9FAFB',
+        'farm-white': '#FFFFFF',
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

@@ -52,21 +52,21 @@ export default function ChatbotPage() {
   }
 
   return (
-    <div className="min-h-screen bg-farm-light-green">
+    <div className="min-h-screen bg-background">
       <Navigation />
       
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {/* 상단: 농동이 캐릭터 */}
         <div className="text-center mb-8">
-          <div className="w-24 h-24 bg-farm-orange rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">🤖</span>
+          <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-primary-foreground text-2xl">🤖</span>
           </div>
           <h1 className="text-3xl font-bold text-farm-brown">농동이 챗봇</h1>
           <p className="text-farm-brown mt-2">농업 전문 AI 어시스턴트</p>
         </div>
 
         {/* 중앙: 채팅 영역 */}
-        <Card className="bg-white mb-6">
+        <Card className="bg-card mb-6">
           <CardContent className="p-6">
             <div className="h-96 overflow-y-auto space-y-4 mb-4">
               {messages.map((message) => (
@@ -106,7 +106,7 @@ export default function ChatbotPage() {
           />
           <Button 
             onClick={handleSendMessage}
-            className="bg-farm-orange hover:bg-farm-orange/90 text-white"
+            className="bg-primary text-primary-foreground"
           >
             전송
           </Button>

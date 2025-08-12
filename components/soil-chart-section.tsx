@@ -21,9 +21,9 @@ const soilTimeSeriesData = [
 
 export default function SoilChartSection() {
   return (
-    <Card className="bg-white h-full">
+    <Card className="bg-card h-full">
       <CardHeader>
-        <CardTitle className="text-farm-brown">토양 성분 변화</CardTitle>
+        <CardTitle className="text-foreground">토양 성분 변화</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-80">

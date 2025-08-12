@@ -7,20 +7,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 export default function MonitoringPage() {
 
   return (
-    <div className="min-h-screen bg-farm-light-green">
+    <div className="min-h-screen bg-background">
       <Navigation />
       
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-farm-brown mb-8">실시간 관리</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-8">실시간 관리</h1>
         
         {/* 왼쪽: CCTV, 오른쪽: 침입자 현황 */}
-        <div className="grid grid-cols-2 gap-6">
+        <div className="container mx-auto py-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
           
           {/* 왼쪽: CCTV 영상 영역 */}
           <div className="space-y-6">
-            <Card className="bg-white">
+            <Card className="bg-card">
               <CardHeader>
-                <CardTitle className="text-farm-brown">CCTV 1</CardTitle>
+                <CardTitle className="text-foreground">CCTV 1</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-72 rounded overflow-hidden">
@@ -36,9 +36,9 @@ export default function MonitoringPage() {
               </CardContent>
             </Card>
             
-            <Card className="bg-white">
+            <Card className="bg-card">
               <CardHeader>
-                <CardTitle className="text-farm-brown">CCTV 2</CardTitle>
+                <CardTitle className="text-foreground">CCTV 2</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-72 rounded overflow-hidden">
@@ -54,9 +54,9 @@ export default function MonitoringPage() {
               </CardContent>
             </Card>
             
-            <Card className="bg-white">
+            <Card className="bg-card">
               <CardHeader>
-                <CardTitle className="text-farm-brown">CCTV 3</CardTitle>
+                <CardTitle className="text-foreground">CCTV 3</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="h-72 rounded overflow-hidden">
@@ -75,9 +75,9 @@ export default function MonitoringPage() {
           
           {/* 오른쪽: 침입자 현황 */}
           <div>
-            <Card className="bg-white h-full">
+            <Card className="bg-card h-full">
               <CardHeader>
-                <CardTitle className="text-farm-brown">침입자 현황</CardTitle>
+                <CardTitle className="text-foreground">침입자 현황</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-red-600 font-semibold">
