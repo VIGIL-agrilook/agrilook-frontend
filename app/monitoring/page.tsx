@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Navigation from '@/components/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import FloatingChatButton from '@/components/floating-chat-button'
 
 export default function MonitoringPage() {
 
@@ -138,6 +139,8 @@ export default function MonitoringPage() {
           </div>
         </div>
       </main>
+      
+      <FloatingChatButton />
     </div>
   )
 }

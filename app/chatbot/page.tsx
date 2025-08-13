@@ -5,6 +5,7 @@ import Navigation from '@/components/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
+import Image from 'next/image'
 
 interface Message {
   id: number
@@ -17,7 +18,7 @@ export default function ChatbotPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: '안녕하세요! 농동이입니다. 농업 관련 궁금한 점이 있으시면 언제든 물어보세요!',
+      text: '안녕하세요! 팜멘토입니다. 농업 관련 궁금한 점이 있으시면 언제든 물어보세요!',
       isUser: false,
       timestamp: new Date()
     }
@@ -56,12 +57,18 @@ export default function ChatbotPage() {
       <Navigation />
       
       <main className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* 상단: 농동이 캐릭터 */}
+        {/* 상단: 팜멘토 캐릭터 */}
         <div className="text-center mb-8">
-          <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-primary-foreground text-2xl">🤖</span>
+          <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden">
+            <Image 
+              src="/farmento.png" 
+              alt="팜멘토 캐릭터" 
+              width={96}
+              height={96}
+              className="object-cover w-full h-full"
+            />
           </div>
-          <h1 className="text-3xl font-bold text-farm-brown">농동이 챗봇</h1>
+          <h1 className="text-3xl font-bold text-farm-brown">팜멘토 챗봇</h1>
           <p className="text-farm-brown mt-2">농업 전문 AI 어시스턴트</p>
         </div>
 

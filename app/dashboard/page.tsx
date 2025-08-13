@@ -7,6 +7,7 @@ import CropSection from '@/components/crop-section'
 import FertilizerSection from '@/components/fertilizer-section'
 import CompostSection from '@/components/compost-section'
 import SoilChartSection from '@/components/soil-chart-section'
+import FloatingChatButton from '@/components/floating-chat-button'
 
 export default function DashboardPage() {
   const [isPremium, setIsPremium] = useState(false)
@@ -39,12 +40,12 @@ export default function DashboardPage() {
           
           {/* 섹션 5: 시계열 그래프 (2행 오른쪽) */}
           <div className={`${!isPremium ? 'blur-section' : ''}`}>
-            <SoilChartSection />
+            <FertilizerSection />
           </div>
           
           {/* 섹션 3: 비료 관리 (3행 왼쪽) */}
           <div className={`${!isPremium ? 'blur-section' : ''}`}>
-            <FertilizerSection />
+            <SoilChartSection />
           </div>
           
           {/* 섹션 4: 퇴비 관리 (3행 오른쪽) */}
@@ -53,6 +54,8 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
+      
+      <FloatingChatButton />
     </div>
   )
 }
