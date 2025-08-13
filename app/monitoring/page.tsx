@@ -1,11 +1,95 @@
 'use client'
 
+import { useState } from 'react'
 import Image from 'next/image'
 import Navigation from '@/components/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import FloatingChatButton from '@/components/floating-chat-button'
 
 export default function MonitoringPage() {
+  const [mainCCTV, setMainCCTV] = useState(1)
+  const [currentIntruderIndex, setCurrentIntruderIndex] = useState(0)
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null)
+
+  const cctvData = [
+    {
+      id: 1,
+      name: 'CCTV 1',
+      location: '농장 입구',
+      image: '/cctv1.jpg'
+    },
+    {
+      id: 2,
+      name: 'CCTV 2',
+      location: '작물 구역 A',
+      image: '/cctv2.jpg'
+    },
+    {
+      id: 3,
+      name: 'CCTV 3',
+      location: '작물 구역 B',
+      image: '/cctv3.jpg'
+    }
+  ]
+
+  const intruderData = [
+    {
+      id: 1,
+      name: '멧돼지',
+      time: '오늘 06:23',
+      image: '/intruder1.png'
+    },
+    {
+      id: 2,
+      name: '고라니',
+      time: '어제 23:50',
+      image: '/intruder2.png'
+    },
+    {
+      id: 3,
+      name: '조류 떼',
+      time: '어제 18:15',
+      image: '/intruder3.png'
+    }
+  ]
+
+  const currentMainCCTV = cctvData.find(cctv => cctv.id === mainCCTV)
+  const subCCTVs = cctvData.filter(cctv => cctv.id !== mainCCTV)
+  const currentIntruder = intruderData[currentIntruderIndex]
+
+  const handleSetMain = (cctvId: number) => {
+    setMainCCTV(cctvId)
+  }
+
+  const handlePrevIntruder = () => {
+    setSlideDirection('right')
+    setTimeout(() => {
+      setCurrentIntruderIndex(prev => 
+        prev === 0 ? intruderData.length - 1 : prev - 1
+      )
+      setSlideDirection(null)
+    }, 150)
+  }
+
+  const handleNextIntruder = () => {
+    setSlideDirection('left')
+    setTimeout(() => {
+      setCurrentIntruderIndex(prev => 
+        prev === intruderData.length - 1 ? 0 : prev + 1
+      )
+      setSlideDirection(null)
+    }, 150)
+  }
+
+  const handleDirectIntruder = (index: number) => {
+    const direction = index > currentIntruderIndex ? 'left' : 'right'
+    setSlideDirection(direction)
+    setTimeout(() => {
+      setCurrentIntruderIndex(index)
+      setSlideDirection(null)
+    }, 150)
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -14,62 +98,79 @@ export default function MonitoringPage() {
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-foreground mb-8">실시간 관리</h1>
         
-        {/* 왼쪽: CCTV, 오른쪽: 침입자 현황 */}
-        <div className="container mx-auto py-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
-          {/* 왼쪽: CCTV 영상 영역 */}
-          <div className="space-y-6">
+          {/* 왼쪽: CCTV 멀티뷰 영역 */}
+          <div>
             <Card className="bg-card">
               <CardHeader>
-                <CardTitle className="text-foreground">CCTV 1</CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-foreground">CCTV 모니터링</CardTitle>
+                  <div className="flex space-x-2">
+                    {cctvData.map((cctv) => (
+                      <Button
+                        key={cctv.id}
+                        onClick={() => handleSetMain(cctv.id)}
+                        variant={mainCCTV === cctv.id ? "default" : "outline"}
+                        size="sm"
+                        className={`transition-all duration-200 ${
+                          mainCCTV === cctv.id 
+                            ? 'bg-primary text-primary-foreground' 
+                            : 'hover:bg-primary/10'
+                        }`}
+                      >
+                        {cctv.name}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="h-72 rounded overflow-hidden">
-                  <Image
-                    src="/cctv1.jpg"
-                    alt="CCTV 1 영상"
-                    width={400}
-                    height={300}
-                    className="w-full h-full object-cover"
-                  />
+                {/* 상단: 메인 화면 */}
+                <div className="mb-4">
+                  <div className="relative h-80 rounded-lg overflow-hidden bg-gray-900">
+                    <Image
+                      src={currentMainCCTV?.image || '/cctv1.jpg'}
+                      alt={`${currentMainCCTV?.name} 메인 영상`}
+                      fill
+                      className="object-cover"
+                    />
+                    {/* 메인 화면 오버레이 정보 */}
+                    <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded text-sm">
+                      {currentMainCCTV?.name} - {currentMainCCTV?.location}
+                    </div>
+                  </div>
                 </div>
-                <div className="text-xs text-gray-400 mt-2">* 실시간 CCTV 영상</div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-card">
-              <CardHeader>
-                <CardTitle className="text-foreground">CCTV 2</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-72 rounded overflow-hidden">
-                  <Image
-                    src="/cctv2.jpg"
-                    alt="CCTV 2 영상"
-                    width={400}
-                    height={300}
-                    className="w-full h-full object-cover"
-                  />
+
+                {/* 하단: 서브 화면 2개 */}
+                <div className="grid grid-cols-2 gap-4">
+                  {subCCTVs.map((cctv) => (
+                    <div key={cctv.id} className="relative">
+                      <div className="h-32 rounded-lg overflow-hidden bg-gray-900">
+                        <Image
+                          src={cctv.image}
+                          alt={`${cctv.name} 서브 영상`}
+                          fill
+                          className="object-cover"
+                        />
+                        {/* 서브 화면 오버레이 정보 */}
+                        <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                          {cctv.name}
+                        </div>
+                      </div>
+                      {/* 메인으로 보기 버튼 */}
+                      <Button
+                        onClick={() => handleSetMain(cctv.id)}
+                        className="w-full mt-2 bg-primary text-primary-foreground hover:bg-primary/90"
+                        size="sm"
+                      >
+                        메인으로 보기
+                      </Button>
+                    </div>
+                  ))}
                 </div>
-                <div className="text-xs text-gray-400 mt-2">* 실시간 CCTV 영상</div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-card">
-              <CardHeader>
-                <CardTitle className="text-foreground">CCTV 3</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-72 rounded overflow-hidden">
-                  <Image
-                    src="/cctv3.jpg"
-                    alt="CCTV 3 영상"
-                    width={400}
-                    height={300}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="text-xs text-gray-400 mt-2">* 실시간 CCTV 영상</div>
+                
+                <div className="text-xs text-gray-400 mt-4">* 실시간 CCTV 영상</div>
               </CardContent>
             </Card>
           </div>
@@ -82,54 +183,69 @@ export default function MonitoringPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-red-600 font-semibold">
-                  최근 24시간 내 침입자 3건 감지
+                  최근 24시간 내 침입자 {intruderData.length}건 감지
                 </div>
                 
-                {/* 멧돼지 */}
-                <div className="space-y-2">
-                  <div className="text-sm text-gray-600">
-                    • 멧돼지 (오늘 06:23)
+                {/* 침입자 슬라이더 */}
+                <div className="relative">
+                  {/* 침입자 이미지 - 슬라이드 효과 */}
+                  <div className="h-96 rounded-lg overflow-hidden bg-gray-100">
+                    <div 
+                      className={`w-full h-full transition-transform duration-300 ease-in-out ${
+                        slideDirection === 'left' ? 'transform -translate-x-full' :
+                        slideDirection === 'right' ? 'transform translate-x-full' :
+                        'transform translate-x-0'
+                      }`}
+                    >
+                      <Image
+                        src={currentIntruder.image}
+                        alt={`${currentIntruder.name} 침입자`}
+                        width={400}
+                        height={400}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   </div>
-                  <div className="ml-4">
-                    <Image
-                      src="/intruder1.png"
-                      alt="멧돼지 침입자"
-                      width={300}
-                      height={200}
-                      className="w-full h-72 object-cover rounded"
-                    />
+                  
+                  {/* 화살표 버튼 */}
+                  <Button
+                    onClick={handlePrevIntruder}
+                    className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 p-0 transition-all duration-200 hover:scale-110"
+                    size="sm"
+                  >
+                    ←
+                  </Button>
+                  <Button
+                    onClick={handleNextIntruder}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 p-0 transition-all duration-200 hover:scale-110"
+                    size="sm"
+                  >
+                    →
+                  </Button>
+                  
+                  {/* 침입자 정보 */}
+                  <div className="mt-4 text-center">
+                    <div className="text-lg font-semibold text-foreground">
+                      {currentIntruder.name}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {currentIntruder.time}
+                    </div>
                   </div>
-                </div>
-
-                {/* 고라니 */}
-                <div className="space-y-2">
-                  <div className="text-sm text-gray-600">
-                    • 고라니 (어제 23:50)
-                  </div>
-                  <div className="ml-4">
-                    <Image
-                      src="/intruder2.png"
-                      alt="고라니 침입자"
-                      width={300}
-                      height={200}
-                      className="w-full h-72 object-cover rounded"
-                    />
-                  </div>
-                </div>
-
-                {/* 조류 떼 */}
-                <div className="space-y-2">
-                  <div className="text-sm text-gray-600">
-                    • 조류 떼 (어제 18:15)
-                  </div>
-                  <div className="ml-4">
-                    <Image
-                      src="/intruder3.png"
-                      alt="조류 떼 침입자"
-                      width={300}
-                      height={200}
-                      className="w-full h-72 object-cover rounded"
-                    />
+                  
+                  {/* 인디케이터 점 */}
+                  <div className="flex justify-center space-x-2 mt-4">
+                    {intruderData.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleDirectIntruder(index)}
+                        className={`w-2 h-2 rounded-full transition-all duration-200 hover:scale-125 ${
+                          index === currentIntruderIndex
+                            ? 'bg-primary scale-125'
+                            : 'bg-gray-300 hover:bg-gray-400'
+                        }`}
+                      />
+                    ))}
                   </div>
                 </div>
 

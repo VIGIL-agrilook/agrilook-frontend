@@ -8,11 +8,6 @@ export default function CompostSection() {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          <img
-            src="/placeholder.svg?height=80&width=200&text=퇴비"
-            alt="퇴비"
-            className="w-full h-20 object-cover rounded"
-          />
           <div className="p-3 bg-secondary rounded-lg">
             <h4 className="font-semibold text-foreground mb-2">퇴비 추천</h4>
             <p className="text-sm text-muted-foreground">

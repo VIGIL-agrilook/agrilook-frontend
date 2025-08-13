@@ -9,8 +9,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 
 export default function MyPage() {
   const [farmAddress, setFarmAddress] = useState('구리시 교문동 486')
+  const [farmSize, setFarmSize] = useState('1000') // 농지 크기 상태 추가
   const [selectedCrops, setSelectedCrops] = useState(['오이', '토마토', '배추'])
   const [showAddressDialog, setShowAddressDialog] = useState(false)
+  const [showSizeDialog, setShowSizeDialog] = useState(false) // 농지 크기 다이얼로그 상태 추가
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const [showDeleteAccountDialog, setShowDeleteAccountDialog] = useState(false)
 
@@ -21,6 +23,11 @@ export default function MyPage() {
   const handleAddressUpdate = () => {
     setShowAddressDialog(false)
     alert('농지 주소가 업데이트되었습니다.')
+  }
+
+  const handleSizeUpdate = () => {
+    setShowSizeDialog(false)
+    alert('농지 크기가 업데이트되었습니다.')
   }
 
   const handleCropToggle = (crop: string) => {
@@ -39,12 +46,13 @@ export default function MyPage() {
         <h1 className="text-3xl font-bold text-foreground mb-8">마이페이지</h1>
         
         <div className="space-y-6">
-          {/* 농지 주소 수정 */}
+          {/* 농지 정보 */}
           <Card className="bg-card">
             <CardHeader>
               <CardTitle className="text-foreground">농지 정보</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* 농지 주소 */}
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   현재 농지 주소
@@ -86,6 +94,70 @@ export default function MyPage() {
                             className="bg-primary text-primary-foreground"
                           >
                             변경 요청
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+
+              {/* 농지 크기 */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  농지 크기
+                </label>
+                <div className="flex gap-2">
+                  <Input 
+                    value={farmSize} 
+                    readOnly 
+                    className="flex-1"
+                    placeholder="농지 크기를 입력하세요"
+                  />
+                  <span className="flex items-center px-3 text-sm text-gray-500 bg-gray-100 rounded-md">
+                    ㎡
+                  </span>
+                  <Dialog open={showSizeDialog} onOpenChange={setShowSizeDialog}>
+                    <DialogTrigger asChild>
+                      <Button className="bg-primary text-primary-foreground">
+                        크기 수정
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>농지 크기 수정</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <p className="text-sm text-gray-600">
+                          농지 크기를 정확히 입력해주세요. 정확한 크기 정보는 맞춤형 관리 방안 제공에 활용됩니다.
+                        </p>
+                        <div className="flex gap-2">
+                          <Input 
+                            type="number"
+                            placeholder="농지 크기"
+                            value={farmSize}
+                            onChange={(e) => setFarmSize(e.target.value)}
+                            className="flex-1"
+                          />
+                          <span className="flex items-center px-3 text-sm text-gray-500 bg-gray-100 rounded-md">
+                            ㎡
+                          </span>
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          * 1평 = 3.3058㎡, 1헥타르 = 10,000㎡
+                        </div>
+                        <div className="flex gap-2 justify-end">
+                          <Button 
+                            variant="outline" 
+                            onClick={() => setShowSizeDialog(false)}
+                          >
+                            취소
+                          </Button>
+                          <Button 
+                            onClick={handleSizeUpdate}
+                            className="bg-primary text-primary-foreground"
+                          >
+                            저장
                           </Button>
                         </div>
                       </div>

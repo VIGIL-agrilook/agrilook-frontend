@@ -89,8 +89,42 @@
   }
 }
 
+/* 개선된 blur-section 클래스 - 카드 크기 변화 방지 */
 .blur-section {
-  filter: blur(4px);
+  position: relative;
   pointer-events: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.blur-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(2px);
+  border-radius: inherit;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.blur-section > * {
+  filter: blur(1px);
   opacity: 0.6;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Premium 섹션 스타일 */
+.premium-section {
+  position: relative;
+  pointer-events: auto;
+  transition: all 0.3s ease-in-out;
+}
+
+.premium-section > * {
+  filter: none;
+  opacity: 1;
+  transition: all 0.3s ease-in-out;
 }

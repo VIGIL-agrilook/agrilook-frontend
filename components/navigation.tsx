@@ -17,7 +17,7 @@ export default function Navigation() {
   ]
 
   return (
-    <nav className="bg-white text-foreground border-b">
+    <nav className="bg-green-600 text-white">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* 로고 */}
@@ -30,8 +30,8 @@ export default function Navigation() {
               className="object-contain"
             />
             <div className="flex items-center space-x-2">
-              <span className="text-xl font-bold">들여다밭</span>
-              <span className="text-sm text-muted-foreground">올인원 AI 농지 관리 플랫폼</span>
+              <span className="text-xl font-bold text-white">들여다밭</span>
+              <span className="text-sm text-green-100">올인원 AI 농지 관리 플랫폼</span>
             </div>
           </Link>
 
@@ -42,8 +42,8 @@ export default function Navigation() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'hover:text-primary transition-colors px-3 py-1 rounded-md',
-                  pathname === item.href && 'text-primary font-semibold border-2 border-green-500'
+                  'hover:text-green-900 hover:bg-white transition-colors px-3 py-1 rounded-md text-white font-medium',
+                  pathname === item.href && 'text-green-900 font-semibold bg-white shadow-sm'
                 )}
               >
                 {item.label}
