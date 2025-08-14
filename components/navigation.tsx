@@ -30,7 +30,8 @@ export default function Navigation() {
               className="object-contain"
             />
             <div className="flex items-center space-x-2">
-              <span className="text-2xl font-bold text-white">들여다밭</span>
+              {/* 모바일에서는 숨기고, 데스크톱에서만 표시 */}
+              <span className="hidden md:block text-2xl font-bold text-white">들여다밭</span>
               {/* 데스크톱에서만 표시되는 서브타이틀 */}
               <span className="hidden md:block text-sm text-green-100">올인원 AI 농지 관리 플랫폼</span>
             </div>
