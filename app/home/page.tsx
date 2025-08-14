@@ -5,6 +5,7 @@ import SummaryCard from '@/components/summary-card'
 import FloatingChatButton from '@/components/floating-chat-button'
 import Farm3DViewer from '@/components/farm-3d-viewer'
 import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
 
 export default function HomePage() {
   const router = useRouter()
@@ -12,8 +13,6 @@ export default function HomePage() {
   const summaryCards = [
     {
       title: '🌱 내 작물',
-      // description: '현재 재배 중인 작물 현황',
-      // icon: '🌱',
       onClick: () => router.push('/dashboard'),
       details: (
         <div className="space-y-1 text-lg">
@@ -34,8 +33,6 @@ export default function HomePage() {
     },
     {
       title: '🌍 토양 성분',
-      // description: 'pH, EC, 영양소 상태',
-      // icon: '🌍',
       onClick: () => router.push('/dashboard'),
       details: (
         <div className="space-y-1 text-lg">
@@ -55,8 +52,6 @@ export default function HomePage() {
     },
     {
       title: '🚨 침입자 관리',
-      // description: '실시간 모니터링 현황',
-      // icon: '🚨',
       onClick: () => router.push('/monitoring'),
       details: (
         <div className="space-y-1 text-lg">
@@ -98,8 +93,6 @@ export default function HomePage() {
               <div key={index} className="col-span-1">
                 <SummaryCard 
                   title={card.title}
-                  description={card.description}
-                  icon={card.icon}
                   onClick={card.onClick}
                   details={card.details}
                   transparent={true} 
@@ -109,7 +102,20 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-
+      
+      {/* 날씨 버튼 */}
+      <button
+        onClick={() => router.push('/dashboard')}
+        className="fixed bottom-32 right-8 w-24 h-24 bg-farm-orange rounded-full shadow-lg hover:shadow-2xl transition-shadow flex items-center justify-center"
+      >
+        <div className="w-20 h-20 bg-farm-cream rounded-full flex items-center justify-center overflow-hidden">
+          <div className="text-center">
+            <div className="text-3xl mb-1">☀️</div>
+            <div className="text-base font-bold text-blue-700">24°C</div>
+          </div>
+        </div>
+      </button>
+      
       <FloatingChatButton />
     </div>
   )

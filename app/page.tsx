@@ -34,15 +34,15 @@ export default function IntroPage() {
         <div className="text-center">
           <div className="mb-8">
             <Image 
-              src="/logo.png" 
+              src="/logo_main.png" 
               alt="들여다밭 로고" 
               width={300}
               height={300}
               className="object-contain mx-auto"
             />
           </div>
-          <h1 className="text-4xl font-bold text-farm-brown mb-4">
-            올인원 토양·침입자 관리
+          <h1 className="text-2xl font-bold text-farm-brown mb-4">
+            올인원 AI 농지 관리 플랫폼
           </h1>
           <p className="text-farm-brown text-lg mb-8">
             AI와 IoT 기술로 노지를 스마트하게 관리하세요
@@ -51,7 +51,7 @@ export default function IntroPage() {
           {/* 체험하기 버튼 (강조) */}
           <Button 
             onClick={handleTryDemo}
-            className="bg-farm-orange hover:bg-farm-orange/90 text-white text-xl px-24 py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200"
+            className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-xl px-24 py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200"
             size="lg"
           >
             🌱 무료 체험하기

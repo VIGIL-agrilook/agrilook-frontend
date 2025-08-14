@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { ResponsiveH3, ResponsiveP, ResponsiveSmall } from '@/components/ui/typography'
 
 export default function CropSection() {
   const crops = [
@@ -29,35 +30,39 @@ export default function CropSection() {
   return (
     <Card className="bg-card h-full">
       <CardHeader>
-        <CardTitle className="text-foreground">내 작물</CardTitle>
+        <CardTitle className="text-foreground">
+          <ResponsiveH3 className="!text-foreground">내 작물</ResponsiveH3>
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-fluid-base">
           {crops.map((crop) => (
-            <div key={crop.name} className="p-4 bg-secondary rounded-lg border border-border">
-              <div className="flex items-center space-x-4">
+            <div key={crop.name} className="p-fluid-base bg-secondary rounded-lg border border-border">
+              <div className="flex items-center space-fluid-base">
                 {/* 아이콘 */}
-                <span className="text-2xl flex-shrink-0">{crop.icon}</span>
+                <span className="text-fluid-2xl flex-shrink-0">{crop.icon}</span>
                 
                 {/* 작물 이름과 상태 */}
                 <div className="flex-shrink-0">
-                  <p className="font-semibold text-foreground">{crop.name}</p>
-                  <Badge className={crop.statusColor}>
+                  <ResponsiveP className="font-semibold text-foreground">{crop.name}</ResponsiveP>
+                  <Badge className={`text-fluid-xs ${crop.statusColor}`}>
                     {crop.status}
                   </Badge>
                 </div>
                 
                 {/* 관리 액션 */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <ResponsiveSmall className="text-muted-foreground leading-relaxed">
                     {crop.action}
-                  </p>
+                  </ResponsiveSmall>
                 </div>
               </div>
             </div>
           ))}
         </div>
-        <div className="text-xs text-gray-400 mt-4">* Mock 데이터 - 작물 관리 API 연동 예정</div>
+        <div className="mt-4">
+          <ResponsiveSmall className="text-gray-400">* Mock 데이터 - 작물 관리 API 연동 예정</ResponsiveSmall>
+        </div>
       </CardContent>
     </Card>
   )

@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import Navigation from '@/components/navigation'
-import SoilStatusSection from '@/components/soil-status-section'
 import CropSection from '@/components/crop-section'
+import SoilWeatherSection from '@/components/soil-weather-section'
 import FertilizerSection from '@/components/fertilizer-section'
 import CompostSection from '@/components/compost-section'
 import SoilChartSection from '@/components/soil-chart-section'
@@ -27,13 +27,13 @@ export default function DashboardPage() {
         {/* 행별 동일 높이 그리드 레이아웃 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
-          {/* 1행: 내 작물과 토양 상태 - 동일 높이 */}
+          {/* 1행: 내 작물과 토양 상태 & 날씨 - 동일 높이 */}
           <div className="h-[450px]">
             <CropSection />
           </div>
           
           <div className="h-[450px]">
-            <SoilStatusSection isPremium={isPremium} />
+            <SoilWeatherSection isPremium={isPremium} />
           </div>
           
           {/* 2행: 토양 진단 버튼 (전체 너비) */}

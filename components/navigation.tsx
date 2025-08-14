@@ -9,11 +9,11 @@ export default function Navigation() {
   const pathname = usePathname()
 
   const navItems = [
-    { href: '/home', label: '🏠 홈' },
-    { href: '/dashboard', label: '📊 대시보드' },
-    { href: '/monitoring', label: '🎥 실시간관리' },
-    { href: '/chatbot', label: '🤖 챗봇' },
-    { href: '/mypage', label: '🌱 마이페이지' }
+    { href: '/home', label: '🏠 홈', mobileIcon: '🏠' },
+    { href: '/dashboard', label: '📊 대시보드', mobileIcon: '📊' },
+    { href: '/monitoring', label: '🎥 실시간관리', mobileIcon: '🎥' },
+    { href: '/chatbot', label: '🤖 챗봇', mobileIcon: '🤖' },
+    { href: '/mypage', label: '🌱 마이페이지', mobileIcon: '🌱' }
   ]
 
   return (
@@ -30,23 +30,27 @@ export default function Navigation() {
               className="object-contain"
             />
             <div className="flex items-center space-x-2">
-              <span className="text-xl font-bold text-white">들여다밭</span>
-              <span className="text-sm text-green-100">올인원 AI 농지 관리 플랫폼</span>
+              <span className="text-2xl font-bold text-white">들여다밭</span>
+              {/* 데스크톱에서만 표시되는 서브타이틀 */}
+              <span className="hidden md:block text-sm text-green-100">올인원 AI 농지 관리 플랫폼</span>
             </div>
           </Link>
 
           {/* 네비게이션 메뉴 */}
-          <div className="flex space-x-8">
+          <div className="flex space-x-2 md:space-x-8">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'hover:text-green-900 hover:bg-white transition-colors px-3 py-1 rounded-md text-white font-medium',
+                  'hover:text-green-900 hover:bg-white transition-colors px-2 md:px-3 py-1 rounded-md text-white font-medium',
                   pathname === item.href && 'text-green-900 font-semibold bg-white shadow-sm'
                 )}
+                title={item.label} // 모바일에서 툴팁으로 표시
               >
-                {item.label}
+                {/* 모바일에서는 아이콘만, 데스크톱에서는 전체 텍스트 */}
+                <span className="md:hidden text-lg">{item.mobileIcon}</span>
+                <span className="hidden md:inline">{item.label}</span>
               </Link>
             ))}
           </div>
