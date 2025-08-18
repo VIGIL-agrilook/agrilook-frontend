@@ -95,17 +95,17 @@ export default function MonitoringPage() {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-foreground mb-8">실시간 관리</h1>
+      <main className="container mx-auto px-4 py-4 md:py-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4 md:mb-8">실시간 관리</h1>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
           
           {/* 왼쪽: CCTV 멀티뷰 영역 */}
           <div>
             <Card className="bg-card">
-              <CardHeader>
+              <CardHeader className="py-3 md:py-6">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-foreground">CCTV 모니터링</CardTitle>
+                  <CardTitle className="text-foreground text-base md:text-lg">CCTV 모니터링</CardTitle>
                   <div className="flex space-x-2">
                     {cctvData.map((cctv) => (
                       <Button
@@ -125,10 +125,10 @@ export default function MonitoringPage() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-3 md:pt-6">
                 {/* 상단: 메인 화면 */}
                 <div className="mb-4">
-                  <div className="relative h-80 rounded-lg overflow-hidden bg-gray-900">
+                  <div className="relative h-56 md:h-80 rounded-lg overflow-hidden bg-gray-900">
                     <Image
                       src={currentMainCCTV?.image || '/cctv1.jpg'}
                       alt={`${currentMainCCTV?.name} 메인 영상`}
@@ -143,10 +143,10 @@ export default function MonitoringPage() {
                 </div>
 
                 {/* 하단: 서브 화면 2개 */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="hidden md:grid grid-cols-2 gap-4">
                   {subCCTVs.map((cctv) => (
                     <div key={cctv.id} className="relative">
-                      <div className="h-32 rounded-lg overflow-hidden bg-gray-900">
+                      <div className="h-16 md:h-32 rounded-lg overflow-hidden bg-gray-900">
                         <Image
                           src={cctv.image}
                           alt={`${cctv.name} 서브 영상`}
@@ -178,10 +178,10 @@ export default function MonitoringPage() {
           {/* 오른쪽: 침입자 현황 */}
           <div>
             <Card className="bg-card h-full">
-              <CardHeader>
-                <CardTitle className="text-foreground">침입자 현황</CardTitle>
+              <CardHeader className="py-3 md:py-6">
+                <CardTitle className="text-foreground text-base md:text-lg">침입자 현황</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3 md:space-y-4 pt-3 md:pt-6">
                 <div className="text-red-600 font-semibold">
                   최근 24시간 내 침입자 {intruderData.length}건 감지
                 </div>
@@ -189,7 +189,7 @@ export default function MonitoringPage() {
                 {/* 침입자 슬라이더 */}
                 <div className="relative">
                   {/* 침입자 이미지 - 슬라이드 효과 */}
-                  <div className="h-96 rounded-lg overflow-hidden bg-gray-100">
+                  <div className="h-40 md:h-96 rounded-lg overflow-hidden bg-gray-100">
                     <div 
                       className={`w-full h-full transition-transform duration-300 ease-in-out ${
                         slideDirection === 'left' ? 'transform -translate-x-full' :
