@@ -82,8 +82,8 @@ export default function HomePage() {
       <Navigation />
       
       <div className="container mx-auto py-8 space-y-6">
-        {/* 3D 모델과 오버레이 카드들 */}
-        <div className="relative h-[800px] bg-card rounded-lg shadow-lg overflow-hidden">
+        {/* 데스크톱: 3D 모델과 오버레이 카드들 */}
+        <div className="relative h-[800px] bg-card rounded-lg shadow-lg overflow-hidden hidden md:block">
           {/* 3D 모델 배경 */}
           <Farm3DViewer className="w-full h-full" />
           
@@ -99,6 +99,28 @@ export default function HomePage() {
                 />
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* 모바일: 한 화면에 3개 섹션이 모두 보이도록 3행 레이아웃 + 아래에 3D 모델 */}
+        <div className="md:hidden">
+          <div className="grid grid-rows-3 gap-3 h-[calc(100vh-220px)]">
+            {summaryCards.map((card, index) => (
+              <div key={index} className="min-h-0">
+                <SummaryCard 
+                  title={card.title}
+                  onClick={card.onClick}
+                  details={card.details}
+                  transparent={false}
+                  compact
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* 모바일: 3D 모델을 카드 아래에 배치 */}
+          <div className="mt-4 bg-card rounded-lg shadow-lg overflow-hidden">
+            <Farm3DViewer className="w-full aspect-[16/9]" />
           </div>
         </div>
       </div>

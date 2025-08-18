@@ -22,13 +22,24 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* 로고 */}
           <Link href="/home" className="flex items-center space-x-2">
+            {/* 모바일용 로고 (긴 버전) */}
+            <Image 
+              src="/logo_longver.png" 
+              alt="들여다밭 로고" 
+              width={120}
+              height={40}
+              className="object-contain md:hidden"
+            />
+            
+            {/* 데스크톱용 로고 (기본 버전) */}
             <Image 
               src="/logo.png" 
               alt="들여다밭 로고" 
               width={40}
               height={40}
-              className="object-contain"
+              className="object-contain hidden md:block"
             />
+            
             <div className="flex items-center space-x-2">
               {/* 모바일에서는 숨기고, 데스크톱에서만 표시 */}
               <span className="hidden md:block text-2xl font-bold text-white">들여다밭</span>

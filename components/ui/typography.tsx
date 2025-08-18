@@ -157,7 +157,7 @@ export function ResponsiveLink({ children, className, as: Component = 'a', ...pr
         'text-fluid-base text-primary underline-offset-4 hover:underline',
         className
       )} 
-      {...props}
+      {...(props as React.ComponentProps<typeof Component>)}
     >
       {children}
     </Component>
