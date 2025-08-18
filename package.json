@@ -6,7 +6,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "npx next start -p $PORT"
+    "start": "next start -p $PORT"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
