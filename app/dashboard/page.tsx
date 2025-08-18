@@ -21,18 +21,18 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="container mx-auto px-2 py-4 sm:px-4 sm:py-8">
+      <main className="container mx-auto px-2 py-3 sm:px-4 sm:py-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-farm-brown mb-4 sm:mb-8">대시보드</h1>
         
         {/* 행별 동일 높이 그리드 레이아웃 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-5">
           
           {/* 1행: 내 작물과 토양 상태 & 날씨 - 동일 높이 */}
-          <div className="h-[360px] lg:h-[450px]">
+          <div className="lg:h-[450px]">
             <CropSection />
           </div>
           
-          <div className="h-[360px] lg:h-[450px]">
+          <div className="lg:h-[450px]">
             <SoilWeatherSection isPremium={isPremium} />
           </div>
           
@@ -57,16 +57,16 @@ export default function DashboardPage() {
           )}
           
           {/* 3행: 비료 관리와 퇴비 관리 - 동일 높이 */}
-          <div className={`h-[280px] lg:h-[350px] ${isPremium ? 'premium-section' : 'blur-section'}`}>
+          <div className={`${isPremium ? 'premium-section' : 'blur-section'} lg:h-[350px]`}>
             <FertilizerSection />
           </div>
           
-          <div className={`h-[280px] lg:h-[350px] ${isPremium ? 'premium-section' : 'blur-section'}`}>
+          <div className={`${isPremium ? 'premium-section' : 'blur-section'} lg:h-[350px]`}>
             <CompostSection />
           </div>
           
           {/* 4행: 시계열 그래프 (전체 너비) */}
-          <div className={`lg:col-span-2 h-[380px] lg:h-[500px] ${isPremium ? 'premium-section' : 'blur-section'}`}>
+          <div className={`lg:col-span-2 lg:h-[500px] ${isPremium ? 'premium-section' : 'blur-section'}`}>
             <SoilChartSection />
           </div>
         </div>

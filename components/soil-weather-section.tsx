@@ -135,34 +135,34 @@ export default function SoilWeatherSection({ isPremium }: SoilWeatherSectionProp
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-6">
-        <div className="grid grid-cols-4 gap-4">
+      <CardContent className="p-4 md:p-6">
+        <div className="grid grid-cols-4 gap-2 md:gap-4 auto-rows-auto">
           {/* 1행 1열: 날씨 */}
-          <div className="bg-gradient-to-br from-blue-100 via-blue-200 to-cyan-300 rounded-xl border border-blue-300 p-4 flex flex-col justify-center items-center shadow-lg h-40">
-            <div className="text-5xl mb-2">☀️</div>
-            <div className="text-2xl font-bold text-blue-900 mb-3">24°C</div>
-            <div className="grid grid-cols-2 gap-2 w-full">
-              <div className="bg-white/60 rounded-lg p-2 text-center">
-                <div className="text-fluid-xs text-blue-700 mb-1 font-medium">습도</div>
-                <div className="text-fluid-sm font-bold text-blue-900">65%</div>
+          <div className="bg-gradient-to-br from-blue-100 via-blue-200 to-cyan-300 rounded-xl border border-blue-300 p-3 md:p-4 flex flex-col justify-center items-center shadow-lg md:h-40">
+            <div className="text-3xl md:text-5xl mb-1 md:mb-2">☀️</div>
+            <div className="text-lg md:text-2xl font-bold text-blue-900 mb-2 md:mb-3">24°C</div>
+            <div className="grid grid-cols-2 gap-1 md:gap-2 w-full">
+              <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center">
+                <div className="text-[10px] md:text-fluid-xs text-blue-700 mb-0.5 md:mb-1 font-medium">습도</div>
+                <div className="text-xs md:text-fluid-sm font-bold text-blue-900">65%</div>
               </div>
-              <div className="bg-white/60 rounded-lg p-2 text-center">
-                <div className="text-fluid-xs text-blue-700 mb-1 font-medium">강수량</div>
-                <div className="text-fluid-sm font-bold text-blue-900">0mm</div>
+              <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center">
+                <div className="text-[10px] md:text-fluid-xs text-blue-700 mb-0.5 md:mb-1 font-medium">강수량</div>
+                <div className="text-xs md:text-fluid-sm font-bold text-blue-900">0mm</div>
               </div>
             </div>
           </div>
 
           {/* 1행 2-4열: 토양 성분 3개 */}
           {soilData.slice(0, 3).map((item) => (
-            <div key={item.name} className="bg-gray-50 rounded-xl p-4 text-center hover:bg-gray-100 transition-colors flex flex-col justify-center h-40">
-              <div className="text-fluid-sm font-semibold text-gray-700 mb-2">
+            <div key={item.name} className="bg-gray-50 rounded-xl p-3 md:p-4 text-center hover:bg-gray-100 transition-colors flex flex-col justify-center md:h-40">
+              <div className="text-[11px] md:text-fluid-sm font-semibold text-gray-700 mb-1 md:mb-2">
                 {item.name} {item.unit}
               </div>
-              <div className="text-xl font-bold text-farm-brown mb-2">
+              <div className="text-base md:text-xl font-bold text-farm-brown mb-1 md:mb-2">
                 {item.value}
               </div>
-              <Badge className={`${getStatusColor(item.status)} text-fluid-xs px-2 py-1 pointer-events-none transition-none hover:bg-transparent hover:text-inherit focus:outline-none focus:ring-0`}>
+              <Badge className={`${getStatusColor(item.status)} text-[10px] md:text-fluid-xs px-1.5 py-0.5 md:px-2 md:py-1 pointer-events-none transition-none hover:bg-transparent hover:text-inherit focus:outline-none focus:ring-0`}>
                 {getStatusText(item.status)}
               </Badge>
             </div>
@@ -170,14 +170,14 @@ export default function SoilWeatherSection({ isPremium }: SoilWeatherSectionProp
 
           {/* 2행 1-4열: 토양 성분 4개 */}
           {soilData.slice(3, 7).map((item) => (
-            <div key={item.name} className="bg-gray-50 rounded-xl p-4 text-center hover:bg-gray-100 transition-colors flex flex-col justify-center h-40">
-              <div className="text-fluid-sm font-semibold text-gray-700 mb-2">
+            <div key={item.name} className="bg-gray-50 rounded-xl p-3 md:p-4 text-center hover:bg-gray-100 transition-colors flex flex-col justify-center md:h-40">
+              <div className="text-[11px] md:text-fluid-sm font-semibold text-gray-700 mb-1 md:mb-2">
                 {item.name} {item.unit}
               </div>
-              <div className="text-xl font-bold text-farm-brown mb-2">
+              <div className="text-base md:text-xl font-bold text-farm-brown mb-1 md:mb-2">
                 {item.value}
               </div>
-              <Badge className={`${getStatusColor(item.status)} text-fluid-xs px-2 py-1 pointer-events-none transition-none hover:bg-transparent hover:text-inherit focus:outline-none focus:ring-0`}>
+              <Badge className={`${getStatusColor(item.status)} text-[10px] md:text-fluid-xs px-1.5 py-0.5 md:px-2 md:py-1 pointer-events-none transition-none hover:bg-transparent hover:text-inherit focus:outline-none focus:ring-0`}>
                 {getStatusText(item.status)}
               </Badge>
             </div>

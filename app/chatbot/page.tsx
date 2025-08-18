@@ -22,10 +22,151 @@ export default function ChatbotPage() {
       text: '안녕하세요! 팜멘토입니다. 농업 관련 궁금한 점이 있으시면 언제든 물어보세요!',
       isUser: false,
       timestamp: new Date()
+    },
+    {
+      id: 2,
+      text: '지금 내 토양에 어떤 비료를 쓰는 게 좋아?',
+      isUser: true,
+      timestamp: new Date()
+    },
+    {
+      id: 3,
+      text: `안녕하세요, 김농부님! 농장에 있는 토마토 비료 처방 정보를 정리해 드릴게요.
+
+### 토마토 비료 처방 정보
+
+| 구분 | 비료 이름 | 성분 (%) | 규격 (kg/봉지) |
+|------|-----------|----------|----------------|
+| 밑거름 | 고추특호 | N 12, P₂O₅ 6, K₂O 5 | 20 |
+| 밑거름 | 고추전용 | N 11, P₂O₅ 6, K₂O 8 | 20 |
+| 밑거름 | 대풍PNS15(원예) | N 13, P₂O₅ 6, K₂O 6 | 15 |
+| 웃거름 | 맞춤추비29호 | N 13, P₂O₅ 0, K₂O 10 | 20 |
+| 웃거름 | 납작이 | N 13, P₂O₅ 0, K₂O 12 | 20 |
+| 웃거름 | 빠른N | N 13, P₂O₅ 0, K₂O 13 | 20 |
+
+👉 위 표는 김농부 님이 설정한 농지 면적에 맞춘 비료 처방량입니다.`,
+      isUser: false,
+      timestamp: new Date()
+    },
+    {
+      id: 4,
+      text: '비료 줄 때 주의해야 할 점도 알려줄래?',
+      isUser: true,
+      timestamp: new Date()
+    },
+    {
+      id: 5,
+      text: `물론입니다, 김농부님! 비료 시비 시 주의사항을 정리해 드릴게요.
+적정량 준수: 과다/부족 시 작물 생육에 문제 발생
+시기 지키기: 밑거름·추비 시기를 놓치지 말기
+비료 혼합 주의: 성분 반응으로 효과 손실 가능
+토양 검사: 현재 pH 6.5, 유기물 22% → 다음 시비 전 재검 추천
+환경 주의: 빗물에 씻겨 수질 오염 위험 → 물 빠짐 좋은 밭은 조심
+보관: 환기 잘되는 그늘에 두고 습기·건조 주의`,
+      isUser: false,
+      timestamp: new Date()
     }
   ])
   const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // 메시지 내 간단한 마크다운(제목/테이블) 렌더러
+  const renderMessageContent = (text: string) => {
+    const lines = text.split('\n')
+    const elements: JSX.Element[] = []
+
+    let i = 0
+    while (i < lines.length) {
+      const line = lines[i]
+      const trimmed = line.trim()
+
+      // 빈 줄은 단락 구분으로 처리
+      if (trimmed.length === 0) {
+        i += 1
+        continue
+      }
+
+      // 제목 (### ) 처리
+      if (trimmed.startsWith('### ')) {
+        elements.push(
+          <div key={`h3-${i}`} className="font-semibold text-sm md:text-base mt-2 mb-1">
+            {trimmed.replace(/^###\s+/, '')}
+          </div>
+        )
+        i += 1
+        continue
+      }
+
+      // 테이블 블록 처리: 연속된 '|' 시작 라인 수집
+      if (trimmed.startsWith('|')) {
+        const tableLines: string[] = []
+        while (i < lines.length && lines[i].trim().startsWith('|')) {
+          tableLines.push(lines[i].trim())
+          i += 1
+        }
+
+        if (tableLines.length >= 2) {
+          const headerCells = tableLines[0]
+            .split('|')
+            .map((c) => c.trim())
+            .filter((c) => c.length > 0)
+
+          // 본문 행: 구분선(---) 라인 제거
+          const bodyLines = tableLines.slice(1).filter((row) => !/^\|?\s*[-: ]+\s*(\|\s*[-: ]+\s*)+\|?$/.test(row))
+
+          elements.push(
+            <div key={`table-${i}`} className="overflow-x-auto my-2">
+              <table className="w-full border-collapse text-[11px] md:text-sm">
+                <thead>
+                  <tr>
+                    {headerCells.map((cell, idx) => (
+                      <th key={`th-${idx}`} className="border px-2 py-1 bg-muted/50 text-left">
+                        {cell}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {bodyLines.map((row, rIdx) => {
+                    const cells = row
+                      .split('|')
+                      .map((c) => c.trim())
+                      .filter((c) => c.length > 0)
+                    return (
+                      <tr key={`tr-${rIdx}`}> 
+                        {cells.map((c, cIdx) => (
+                          <td key={`td-${rIdx}-${cIdx}`} className="border px-2 py-1 align-top">
+                            {c}
+                          </td>
+                        ))}
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )
+          continue
+        }
+      }
+
+      // 일반 문단: 다음 빈 줄 전까지 묶어서 출력
+      const para: string[] = []
+      while (i < lines.length && lines[i].trim().length > 0 && !lines[i].trim().startsWith('|')) {
+        para.push(lines[i])
+        i += 1
+      }
+      if (para.length > 0) {
+        elements.push(
+          <div key={`p-${i}`} className="whitespace-pre-wrap text-xs md:text-sm leading-snug">
+            {para.join('\n')}
+          </div>
+        )
+      }
+    }
+
+    return <>{elements}</>
+  }
 
   // 새 메시지가 추가될 때마다 스크롤을 맨 아래로 이동
   const scrollToBottom = () => {
@@ -112,13 +253,13 @@ export default function ChatbotPage() {
                   className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[75%] md:max-w-md px-3 py-2 md:px-4 md:py-3 rounded-lg ${
+                    className={`max-w-[92%] md:max-w-2xl lg:max-w-3xl px-3 py-2 md:px-4 md:py-3 rounded-lg ${
                       message.isUser
                         ? 'bg-primary text-primary-foreground'
                         : 'bg-muted text-foreground'
                     }`}
                   >
-                    <ResponsiveP className="break-words">{message.text}</ResponsiveP>
+                    <div className="break-words">{renderMessageContent(message.text)}</div>
                     <ResponsiveSmall className="opacity-70 mt-1 block">
                       {message.timestamp.toLocaleTimeString()}
                     </ResponsiveSmall>
