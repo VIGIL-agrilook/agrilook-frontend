@@ -184,14 +184,7 @@ export default function SoilWeatherSection({ isPremium }: SoilWeatherSectionProp
           ))}
         </div>
 
-        {/* 토양 센서 데이터가 없을 때 안내 메시지 */}
-        {!latestSoilData && (
-          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <ResponsiveSmall className="text-yellow-800 text-center block">
-              💡 정확한 토양 분석을 위해 마이페이지에서 토양 센서 데이터를 업로드해보세요!
-            </ResponsiveSmall>
-          </div>
-        )}
+        
       </CardContent>
     </Card>
   )

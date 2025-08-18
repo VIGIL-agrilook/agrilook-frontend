@@ -43,7 +43,7 @@ export default function FertilizerSection() {
           {fertilizerRecommendations.map((fertilizer) => (
             <div key={fertilizer.rank} className="border border-gray-200 rounded-lg p-fluid-base hover:bg-gray-50 transition-colors">
               {/* 순위 배지 */}
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-3 min-w-0">
                 <Badge className={`text-fluid-xs px-2 py-1 ${
                   fertilizer.rank === 1 ? 'bg-yellow-100 text-yellow-800' :
                   fertilizer.rank === 2 ? 'bg-gray-100 text-gray-800' :
@@ -51,7 +51,7 @@ export default function FertilizerSection() {
                 }`}>
                   {fertilizer.rank}순위
                 </Badge>
-                <span className="text-fluid-sm font-medium text-green-600">{fertilizer.dosage}</span>
+                <span className="text-fluid-sm font-medium text-green-600 break-all">{fertilizer.dosage}</span>
               </div>
 
               {/* 비료 이미지 */}
@@ -65,19 +65,19 @@ export default function FertilizerSection() {
 
               {/* 비료 정보 */}
               <div className="space-fluid-sm text-center">
-                <ResponsiveH5 className="font-semibold text-foreground">
+                <ResponsiveH5 className="font-semibold text-foreground break-words leading-tight">
                   {fertilizer.name}
                 </ResponsiveH5>
                 <div className="space-fluid-xs">
                   <div className="flex flex-col items-center">
-                    <ResponsiveSmall className="text-gray-600">NPK 비율</ResponsiveSmall>
-                    <ResponsiveSmall className="font-medium text-blue-600">
+                    <ResponsiveSmall className="text-gray-600 break-words leading-tight">NPK 비율</ResponsiveSmall>
+                    <ResponsiveSmall className="font-medium text-blue-600 break-words leading-tight">
                       {fertilizer.npk}
                     </ResponsiveSmall>
                   </div>
                   <div className="flex flex-col items-center">
-                    <ResponsiveSmall className="text-gray-600">부족분</ResponsiveSmall>
-                    <ResponsiveSmall className="font-medium text-red-600">
+                    <ResponsiveSmall className="text-gray-600 break-words leading-tight">부족분</ResponsiveSmall>
+                    <ResponsiveSmall className="font-medium text-red-600 break-words leading-tight">
                       {fertilizer.deficiency}
                     </ResponsiveSmall>
                   </div>
@@ -88,7 +88,7 @@ export default function FertilizerSection() {
         </div>
 
         {/* 비료 처방 안내*/}
-        <div className="text-center">
+        <div className="text-center mb-3">
           <ResponsiveSmall className="text-gray-400">
             * 추천비료와 함께 부족분에 대한 단일비료를 추가로 사용하신다면 작물이 더 잘 자라요!
           </ResponsiveSmall>

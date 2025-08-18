@@ -9,16 +9,18 @@ export default function CompostSection() {
       <CardContent>
         <div className="space-y-3">
           <div className="p-3 bg-secondary rounded-lg">
-            <h4 className="font-semibold text-foreground mb-2">퇴비 추천</h4>
+            <h4 className="font-semibold text-foreground mb-2">토마토 추천퇴비</h4>
             <p className="text-sm text-muted-foreground">
-              우분 퇴비 - 2톤/10a<br/>
-              계분 퇴비 - 1.5톤/10a<br/>
-              적용 시기: 파종 2주 전
+            우분퇴비	처방량 : 3kg<br/>
+            계분퇴비	처방량 : 3kg<br/>
+            돈부퇴비	처방량 : 3kg<br/>
+            혼합퇴비	처방량 : 3kg<br/>
             </p>
           </div>
           <div className="text-xs text-gray-400">
-            * Mock 데이터 - 퇴비추천 API 연동 예정 (작물별 맞춤 퇴비 추천)
+          * 4가지 퇴비 중 하나를 선택해서 처방해주세요
           </div>
+          
         </div>
       </CardContent>
     </Card>
