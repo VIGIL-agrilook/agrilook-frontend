@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { ResponsiveH1, ResponsiveP, ResponsiveSmall } from '@/components/ui/typography'
 import Image from 'next/image'
+import { apiService } from '@/lib/api'
 
 interface Message {
   id: number
@@ -68,6 +69,7 @@ export default function ChatbotPage() {
     }
   ])
   const [inputValue, setInputValue] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // 메시지 내 간단한 마크다운(제목/테이블) 렌더러
@@ -177,8 +179,8 @@ export default function ChatbotPage() {
     scrollToBottom()
   }, [messages])
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return
 
     const userMessage: Message = {
       id: messages.length + 1,
@@ -187,15 +189,37 @@ export default function ChatbotPage() {
       timestamp: new Date()
     }
 
-    const botResponse: Message = {
-      id: messages.length + 2,
-      text: '죄송합니다. 현재 RAG 기반 챗봇 연동을 준비 중입니다. 곧 더 정확한 답변을 드릴 수 있을 예정입니다!',
-      isUser: false,
-      timestamp: new Date()
-    }
-
-    setMessages(prev => [...prev, userMessage, botResponse])
+    // 사용자 메시지 추가
+    setMessages(prev => [...prev, userMessage])
     setInputValue('')
+    setIsLoading(true)
+
+    try {
+      // 백엔드 API 호출
+      const response = await apiService.sendChatMessage(inputValue)
+      
+      const botResponse: Message = {
+        id: messages.length + 2,
+        text: response.answer,
+        isUser: false,
+        timestamp: new Date()
+      }
+
+      setMessages(prev => [...prev, botResponse])
+    } catch (error) {
+      console.error('챗봇 API 호출 오류:', error)
+      
+      const errorResponse: Message = {
+        id: messages.length + 2,
+        text: '죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        isUser: false,
+        timestamp: new Date()
+      }
+
+      setMessages(prev => [...prev, errorResponse])
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -292,9 +316,10 @@ export default function ChatbotPage() {
           />
           <Button 
             onClick={handleSendMessage}
+            disabled={isLoading}
             className="bg-primary text-primary-foreground px-4 md:px-6"
           >
-            전송
+            {isLoading ? '전송 중...' : '전송'}
           </Button>
         </div>
       </div>

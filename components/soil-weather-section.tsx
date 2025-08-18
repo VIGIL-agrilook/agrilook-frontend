@@ -9,9 +9,15 @@ import { SoilSensorData } from '@/lib/types'
 
 interface SoilWeatherSectionProps {
   isPremium: boolean
+  weatherData?: {
+    humidity: number
+    precipitation: number
+    temperature: number
+    weather: string
+  } | null
 }
 
-export default function SoilWeatherSection({ isPremium }: SoilWeatherSectionProps) {
+export default function SoilWeatherSection({ isPremium, weatherData }: SoilWeatherSectionProps) {
   const [latestSoilData, setLatestSoilData] = useState<SoilSensorData | null>(null)
   const [dataTimestamp, setDataTimestamp] = useState<string>('')
 
@@ -139,18 +145,28 @@ export default function SoilWeatherSection({ isPremium }: SoilWeatherSectionProp
         <div className="grid grid-cols-4 gap-2 md:gap-4 auto-rows-auto">
           {/* 1행 1열: 날씨 */}
           <div className="bg-gradient-to-br from-blue-100 via-blue-200 to-cyan-300 rounded-xl border border-blue-300 p-3 md:p-4 flex flex-col justify-center items-center shadow-lg md:h-40">
-            <div className="text-3xl md:text-5xl mb-1 md:mb-2">☀️</div>
-            <div className="text-lg md:text-2xl font-bold text-blue-900 mb-2 md:mb-3">24°C</div>
-                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 md:gap-2 w-full">
-               <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center flex items-center justify-center">
-                 <span className="text-[8px] sm:text-[10px] md:text-fluid-xs text-blue-700 font-medium">습도</span>
-                 <span className="text-[10px] sm:text-xs md:text-fluid-sm font-bold text-blue-900 ml-1">65%</span>
-               </div>
-               <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center flex items-center justify-center">
-                 <span className="text-[8px] sm:text-[10px] md:text-fluid-xs text-blue-700 font-medium">강수량</span>
-                 <span className="text-[10px] sm:text-xs md:text-fluid-sm font-bold text-blue-900 ml-1">0mm</span>
-               </div>
-             </div>
+            <div className="text-3xl md:text-5xl mb-1 md:mb-2">
+              {weatherData?.weather === 'rain' ? '🌧️' : 
+               weatherData?.weather === 'cloudy' ? '☁️' : 
+               weatherData?.weather === 'snow' ? '❄️' : '☀️'}
+            </div>
+            <div className="text-lg md:text-2xl font-bold text-blue-900 mb-2 md:mb-3">
+              {weatherData ? `${weatherData.temperature}°C` : '24°C'}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 md:gap-2 w-full">
+              <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center flex items-center justify-center">
+                <span className="text-[8px] sm:text-[10px] md:text-fluid-xs text-blue-700 font-medium">습도</span>
+                <span className="text-[10px] sm:text-xs md:text-fluid-sm font-bold text-blue-900 ml-1">
+                  {weatherData ? `${weatherData.humidity}%` : '65%'}
+                </span>
+              </div>
+              <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center flex items-center justify-center">
+                <span className="text-[8px] sm:text-[10px] md:text-fluid-xs text-blue-700 font-medium">강수량</span>
+                <span className="text-[10px] sm:text-xs md:text-fluid-sm font-bold text-blue-900 ml-1">
+                  {weatherData ? `${weatherData.precipitation}mm` : '0mm'}
+                </span>
+              </div>
+            </div>
           </div>
 
           {/* 1행 2-4열: 토양 성분 3개 */}

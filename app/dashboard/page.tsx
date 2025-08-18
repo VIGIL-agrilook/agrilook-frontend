@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navigation from '@/components/navigation'
 import CropSection from '@/components/crop-section'
 import SoilWeatherSection from '@/components/soil-weather-section'
@@ -9,10 +9,30 @@ import CompostSection from '@/components/compost-section'
 import SoilChartSection from '@/components/soil-chart-section'
 import FloatingChatButton from '@/components/floating-chat-button'
 import { Button } from '@/components/ui/button'
+import { apiService } from '@/lib/api'
 
 export default function DashboardPage() {
   const [isPremium, setIsPremium] = useState(false)
   const [selectedCrop, setSelectedCrop] = useState<string>('토마토') // 기본값으로 토마토 선택
+  const [weatherData, setWeatherData] = useState<any>(null)
+
+  // 날씨 데이터 가져오기
+  useEffect(() => {
+    const fetchWeatherData = async () => {
+      try {
+        const response = await apiService.getCurrentWeather()
+        setWeatherData(response.data)
+      } catch (error) {
+        console.error('날씨 데이터 가져오기 오류:', error)
+      }
+    }
+
+    fetchWeatherData()
+    // 5분마다 날씨 데이터 업데이트
+    const interval = setInterval(fetchWeatherData, 5 * 60 * 1000)
+    
+    return () => clearInterval(interval)
+  }, [])
 
   const handlePremiumUpgrade = () => {
     setIsPremium(true)
@@ -38,7 +58,7 @@ export default function DashboardPage() {
           </div>
           
           <div className="lg:h-[450px]">
-            <SoilWeatherSection isPremium={isPremium} />
+            <SoilWeatherSection isPremium={isPremium} weatherData={weatherData} />
           </div>
           
           {/* 2행: 토양 진단 버튼 (전체 너비) */}

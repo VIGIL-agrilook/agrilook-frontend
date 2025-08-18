@@ -6,6 +6,7 @@ import Navigation from '@/components/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import FloatingChatButton from '@/components/floating-chat-button'
+import { StreamPlayer, StreamStatus } from '@/components/stream-player'
 
 export default function MonitoringPage() {
   const [mainCCTV, setMainCCTV] = useState(1)
@@ -97,6 +98,21 @@ export default function MonitoringPage() {
       
       <main className="container mx-auto px-4 py-4 md:py-8 pt-20">
         <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4 md:mb-8">실시간 관리</h1>
+        
+        {/* 실시간 스트림 플레이어 */}
+        <div className="mb-6">
+          <Card className="bg-card">
+            <CardHeader className="py-3 md:py-6">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-foreground text-base md:text-lg">실시간 스트림</CardTitle>
+                <StreamStatus />
+              </div>
+            </CardHeader>
+            <CardContent className="pt-3 md:pt-6">
+              <StreamPlayer />
+            </CardContent>
+          </Card>
+        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
           
