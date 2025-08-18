@@ -17,12 +17,12 @@ interface Message {
 
 export default function ChatbotPage() {
   const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      text: '안녕하세요! 팜멘토입니다. 농업 관련 궁금한 점이 있으시면 언제든 물어보세요!',
-      isUser: false,
-      timestamp: new Date()
-    },
+    // {
+    //   id: 1,
+    //   text: '안녕하세요! 팜멘토입니다. 농업 관련 궁금한 점이 있으시면 언제든 물어보세요!',
+    //   isUser: false,
+    //   timestamp: new Date()
+    // },
     {
       id: 2,
       text: '지금 내 토양에 어떤 비료를 쓰는 게 좋아?',
@@ -210,7 +210,7 @@ export default function ChatbotPage() {
       <Navigation />
       
       {/* 메인 컨테이너 - 남은 공간을 모두 차지 */}
-      <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4">
+      <main className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4 pt-20">
         {/* 상단: 팜멘토 캐릭터 - 고정 높이 */}
         <div className="text-center py-4 md:py-6 flex-shrink-0">
           <div className="relative w-20 h-20 md:w-24 md:h-24 mx-auto mb-3 md:mb-4">
@@ -278,9 +278,11 @@ export default function ChatbotPage() {
             </div>
           </CardContent>
         </Card>
+      </main>
 
-        {/* 하단: 입력창 - 고정 위치 */}
-        <div className="flex gap-2 pb-4 md:pb-6 flex-shrink-0">
+      {/* 하단: 입력창 - 화면 하단에 고정 */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-10">
+        <div className="max-w-4xl mx-auto flex gap-2">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -295,7 +297,10 @@ export default function ChatbotPage() {
             전송
           </Button>
         </div>
-      </main>
+      </div>
+
+      {/* 입력창 높이만큼 하단 여백 추가 */}
+      <div className="h-20 md:h-24"></div>
     </div>
   )
 }

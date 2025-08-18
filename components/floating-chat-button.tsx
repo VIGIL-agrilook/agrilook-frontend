@@ -9,7 +9,7 @@ export default function FloatingChatButton() {
   return (
     <button
       onClick={() => router.push('/chatbot')}
-      className="fixed bottom-6 right-6 w-16 h-16 md:bottom-8 md:right-8 md:w-24 md:h-24 bg-farm-orange rounded-full shadow-lg hover:shadow-2xl transition-shadow flex items-center justify-center z-50"
+      className="fixed bottom-6 right-6 w-16 h-16 md:bottom-8 md:right-8 md:w-24 md:h-24 bg-farm-orange bg-opacity-95 rounded-full shadow-lg hover:shadow-2xl transition-shadow flex items-center justify-center z-50"
     >
       <div className="w-12 h-12 md:w-20 md:h-20 bg-farm-cream rounded-full flex items-center justify-center overflow-hidden">
         <Image 

@@ -17,35 +17,22 @@ export default function Navigation() {
   ]
 
   return (
-    <nav className="bg-green-600 text-white">
+    <nav className="bg-green-600 text-white fixed top-0 left-0 right-0 z-50 shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* 로고 */}
           <Link href="/home" className="flex items-center space-x-2">
-            {/* 모바일용 로고 (긴 버전) */}
-            <Image 
-              src="/logo_longver.png" 
-              alt="들여다밭 로고" 
-              width={120}
-              height={40}
-              className="object-contain md:hidden"
-            />
-            
-            {/* 데스크톱용 로고 (기본 버전) */}
+            {/* 로고 이미지 */}
             <Image 
               src="/logo.png" 
               alt="들여다밭 로고" 
               width={40}
               height={40}
-              className="object-contain hidden md:block"
+              className="object-contain"
             />
             
-            <div className="flex items-center space-x-2">
-              {/* 모바일에서는 숨기고, 데스크톱에서만 표시 */}
-              <span className="hidden md:block text-2xl font-bold text-white">들여다밭</span>
-              {/* 데스크톱에서만 표시되는 서브타이틀 */}
-              <span className="hidden md:block text-sm text-green-100">올인원 AI 농지 관리 플랫폼</span>
-            </div>
+            {/* 브랜드명 */}
+            <span className="text-xl md:text-2xl font-bold text-white">들여다밭</span>
           </Link>
 
           {/* 네비게이션 메뉴 */}

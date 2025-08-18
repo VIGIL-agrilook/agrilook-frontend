@@ -12,16 +12,21 @@ import { Button } from '@/components/ui/button'
 
 export default function DashboardPage() {
   const [isPremium, setIsPremium] = useState(false)
+  const [selectedCrop, setSelectedCrop] = useState<string>('토마토') // 기본값으로 토마토 선택
 
   const handlePremiumUpgrade = () => {
     setIsPremium(true)
+  }
+
+  const handleCropSelect = (cropName: string) => {
+    setSelectedCrop(cropName)
   }
 
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="container mx-auto px-2 py-3 sm:px-4 sm:py-8">
+      <main className="container mx-auto px-2 py-3 sm:px-4 sm:py-8 pt-20">
         <h1 className="text-2xl sm:text-3xl font-bold text-farm-brown mb-4 sm:mb-8">대시보드</h1>
         
         {/* 행별 동일 높이 그리드 레이아웃 */}
@@ -29,7 +34,7 @@ export default function DashboardPage() {
           
           {/* 1행: 내 작물과 토양 상태 & 날씨 - 동일 높이 */}
           <div className="lg:h-[450px]">
-            <CropSection />
+            <CropSection onCropSelect={handleCropSelect} selectedCrop={selectedCrop} />
           </div>
           
           <div className="lg:h-[450px]">
@@ -58,11 +63,11 @@ export default function DashboardPage() {
           
           {/* 3행: 비료 관리와 퇴비 관리 - 동일 높이 */}
           <div className={`${isPremium ? 'premium-section' : 'blur-section'} lg:h-[350px]`}>
-            <FertilizerSection />
+            <FertilizerSection selectedCrop={selectedCrop} />
           </div>
           
           <div className={`${isPremium ? 'premium-section' : 'blur-section'} lg:h-[350px]`}>
-            <CompostSection />
+            <CompostSection selectedCrop={selectedCrop} />
           </div>
           
           {/* 4행: 시계열 그래프 (전체 너비) */}

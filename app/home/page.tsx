@@ -81,7 +81,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <div className="container mx-auto py-4 space-y-4">
+      <div className="container mx-auto py-4 space-y-4 pt-20">
         {/* 데스크톱: 3D 모델과 오버레이 카드들 */}
         <div className="relative h-[800px] bg-card rounded-lg shadow-lg overflow-hidden hidden md:block">
           {/* 3D 모델 배경 */}
@@ -128,7 +128,7 @@ export default function HomePage() {
       {/* 날씨 버튼 */}
       <button
         onClick={() => router.push('/dashboard')}
-        className="fixed bottom-24 right-6 w-16 h-16 md:bottom-32 md:right-8 md:w-24 md:h-24 bg-farm-orange rounded-full shadow-lg hover:shadow-2xl transition-shadow flex items-center justify-center"
+        className="fixed bottom-24 right-6 w-16 h-16 md:bottom-32 md:right-8 md:w-24 md:h-24 bg-farm-orange bg-opacity-95 rounded-full shadow-lg hover:shadow-2xl transition-shadow flex items-center justify-center"
       >
         <div className="w-12 h-12 md:w-20 md:h-20 bg-farm-cream rounded-full flex items-center justify-center overflow-hidden">
           <div className="text-center">

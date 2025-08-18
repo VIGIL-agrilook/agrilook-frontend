@@ -95,7 +95,7 @@ export default function MonitoringPage() {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="container mx-auto px-4 py-4 md:py-8">
+      <main className="container mx-auto px-4 py-4 md:py-8 pt-20">
         <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4 md:mb-8">실시간 관리</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">

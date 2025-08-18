@@ -2,7 +2,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ResponsiveH3, ResponsiveP, ResponsiveSmall } from '@/components/ui/typography'
 
-export default function CropSection() {
+interface CropSectionProps {
+  onCropSelect: (cropName: string) => void
+  selectedCrop: string
+}
+
+export default function CropSection({ onCropSelect, selectedCrop }: CropSectionProps) {
   const crops = [
     { 
       name: '오이', 
@@ -37,7 +42,15 @@ export default function CropSection() {
       <CardContent>
         <div className="space-fluid-base">
           {crops.map((crop) => (
-            <div key={crop.name} className="p-fluid-base bg-secondary rounded-lg border border-border">
+            <div 
+              key={crop.name} 
+              className={`p-fluid-base bg-secondary rounded-lg border border-border cursor-pointer transition-all duration-200 hover:shadow-md ${
+                selectedCrop === crop.name 
+                  ? 'ring-2 ring-primary ring-opacity-50 bg-primary/5 border-primary/30' 
+                  : 'hover:bg-secondary/80'
+              }`}
+              onClick={() => onCropSelect(crop.name)}
+            >
               <div className="flex items-center space-fluid-base">
                 {/* 아이콘 */}
                 <span className="text-fluid-2xl flex-shrink-0">{crop.icon}</span>
@@ -56,12 +69,21 @@ export default function CropSection() {
                     {crop.action}
                   </ResponsiveSmall>
                 </div>
+
+                {/* 선택 표시 */}
+                {selectedCrop === crop.name && (
+                  <div className="flex-shrink-0">
+                    <Badge className="bg-primary text-primary-foreground text-fluid-xs">
+                      선택됨
+                    </Badge>
+                  </div>
+                )}
               </div>
             </div>
           ))}
         </div>
         <div className="mt-4">
-          <ResponsiveSmall className="text-gray-400">* Mock 데이터 - 작물 관리 API 연동 예정</ResponsiveSmall>
+          <ResponsiveSmall className="text-gray-400">* 작물을 클릭하여 비료/퇴비 추천을 확인하세요</ResponsiveSmall>
         </div>
       </CardContent>
     </Card>

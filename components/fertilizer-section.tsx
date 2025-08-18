@@ -2,39 +2,101 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ResponsiveH3, ResponsiveH5, ResponsiveP, ResponsiveSmall } from '@/components/ui/typography'
 
-export default function FertilizerSection() {
-  const fertilizerRecommendations = [
-    {
-      rank: 1,
-      name: "복합비료 A",
-      npk: "N-P-K: 15-15-15",
-      dosage: "20kg/10a",
-      deficiency: "질소 부족",
-      image: "/placeholder.svg?height=80&width=200&text=비료A"
-    },
-    {
-      rank: 2,
-      name: "유기질비료 B",
-      npk: "N-P-K: 8-12-10",
-      dosage: "15kg/10a",
-      deficiency: "인산 부족",
-      image: "/placeholder.svg?height=80&width=200&text=비료B"
-    },
-    {
-      rank: 3,
-      name: "미량원소비료 C",
-      npk: "N-P-K: 5-8-12",
-      dosage: "10kg/10a",
-      deficiency: "칼륨 부족",
-      image: "/placeholder.svg?height=80&width=200&text=비료C"
-    }
-  ]
+interface FertilizerSectionProps {
+  selectedCrop: string
+}
+
+export default function FertilizerSection({ selectedCrop }: FertilizerSectionProps) {
+  // 작물별 비료 추천 데이터
+  const cropFertilizers = {
+    '토마토': [
+      {
+        rank: 1,
+        name: "토마토 전용비료",
+        npk: "N-P-K: 12-6-8",
+        dosage: "25kg/10a",
+        deficiency: "질소 부족",
+        image: "/placeholder.svg?height=80&width=200&text=토마토비료"
+      },
+      {
+        rank: 2,
+        name: "칼륨 강화비료",
+        npk: "N-P-K: 8-4-12",
+        dosage: "20kg/10a",
+        deficiency: "칼륨 부족",
+        image: "/placeholder.svg?height=80&width=200&text=칼륨비료"
+      },
+      {
+        rank: 3,
+        name: "미량원소비료",
+        npk: "N-P-K: 5-3-6",
+        dosage: "15kg/10a",
+        deficiency: "칼슘 부족",
+        image: "/placeholder.svg?height=80&width=200&text=미량비료"
+      }
+    ],
+    '오이': [
+      {
+        rank: 1,
+        name: "오이 전용비료",
+        npk: "N-P-K: 15-8-10",
+        dosage: "30kg/10a",
+        deficiency: "질소 부족",
+        image: "/placeholder.svg?height=80&width=200&text=오이비료"
+      },
+      {
+        rank: 2,
+        name: "인산 강화비료",
+        npk: "N-P-K: 10-12-8",
+        dosage: "25kg/10a",
+        deficiency: "인산 부족",
+        image: "/placeholder.svg?height=80&width=200&text=인산비료"
+      },
+      {
+        rank: 3,
+        name: "유기질비료",
+        npk: "N-P-K: 6-8-6",
+        dosage: "20kg/10a",
+        deficiency: "유기물 부족",
+        image: "/placeholder.svg?height=80&width=200&text=유기비료"
+      }
+    ],
+    '배추': [
+      {
+        rank: 1,
+        name: "배추 전용비료",
+        npk: "N-P-K: 18-10-12",
+        dosage: "35kg/10a",
+        deficiency: "질소 부족",
+        image: "/placeholder.svg?height=80&width=200&text=배추비료"
+      },
+      {
+        rank: 2,
+        name: "복합비료",
+        npk: "N-P-K: 12-12-12",
+        dosage: "30kg/10a",
+        deficiency: "균형 부족",
+        image: "/placeholder.svg?height=80&width=200&text=복합비료"
+      },
+      {
+        rank: 3,
+        name: "칼륨비료",
+        npk: "N-P-K: 8-6-15",
+        dosage: "25kg/10a",
+        deficiency: "칼륨 부족",
+        image: "/placeholder.svg?height=80&width=200&text=칼륨비료"
+      }
+    ]
+  }
+
+  // 선택된 작물의 비료 추천 가져오기
+  const fertilizerRecommendations = cropFertilizers[selectedCrop as keyof typeof cropFertilizers] || cropFertilizers['토마토']
 
   return (
     <Card className="bg-card h-full">
       <CardHeader>
         <CardTitle className="text-foreground flex items-center gap-2">
-          <ResponsiveH3 className="!text-foreground">🌱 비료 추천</ResponsiveH3>
+          <ResponsiveH3 className="!text-foreground">🌱 {selectedCrop} 비료 추천</ResponsiveH3>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-fluid-base">
@@ -90,7 +152,7 @@ export default function FertilizerSection() {
         {/* 비료 처방 안내*/}
         <div className="text-center mb-3">
           <ResponsiveSmall className="text-gray-400">
-            * 추천비료와 함께 부족분에 대한 단일비료를 추가로 사용하신다면 작물이 더 잘 자라요!
+            * {selectedCrop}에 최적화된 비료 추천입니다. 부족분에 대한 단일비료를 추가로 사용하시면 더 좋은 결과를 얻을 수 있어요!
           </ResponsiveSmall>
         </div>
       </CardContent>

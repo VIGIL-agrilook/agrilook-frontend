@@ -77,7 +77,7 @@ export default function MyPage() {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
+      <main className="container mx-auto px-4 py-8 max-w-4xl pt-20">
         <ResponsiveH1 className="text-foreground mb-8">마이페이지</ResponsiveH1>
         
         <div className="space-y-6">
