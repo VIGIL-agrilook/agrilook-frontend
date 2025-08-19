@@ -45,6 +45,8 @@ jobs:
           cp -r lib deployment/
           cp startup.sh deployment/
           cp .deployment deployment/
+          # Azure에서 빌드하지 않도록 설정
+          echo "SCM_DO_BUILD_DURING_DEPLOYMENT=false" >> deployment/.env
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
