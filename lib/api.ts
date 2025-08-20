@@ -1,4 +1,4 @@
-const API_BASE_URL = '/api'; // 상대 경로 사용
+const API_BASE_URL = '/api'; // Next.js API 라우트 사용
 
 // 타입 정의
 export interface FertilizerRecommendationRequest {

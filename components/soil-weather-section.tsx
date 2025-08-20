@@ -200,6 +200,10 @@ export default function SoilWeatherSection({ isPremium, weatherData }: SoilWeath
           ))}
         </div>
 
+        {/* 날씨 정보 섹션 */}
+        <div className="mt-6">
+          <WeatherSection weatherData={weatherData} />
+        </div>
         
       </CardContent>
     </Card>

@@ -1,109 +1,201 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Hls from 'hls.js';
 
-// hls.js 타입 정의 (실제 사용시 npm install hls.js 필요)
-declare global {
-  interface Window {
-    Hls: any;
-  }
+interface StreamPlayerProps {
+  cctvId?: number;
+  className?: string;
+  showControls?: boolean;
+  showInfo?: boolean;
 }
 
-export const StreamPlayer = () => {
+export const StreamPlayer = ({ 
+  cctvId = 1, 
+  className = "", 
+  showControls = true,
+  showInfo = true 
+}: StreamPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // 상대 경로로 HLS 스트림 접근
-    const streamUrl = '/hls';
+    setIsLoading(true);
+    setError(null);
+
+    // Azure nginx 서버의 HLS 스트림 URL
+    // nginx.conf에서 설정한 경로에 맞춰 스트림 URL 설정
+    // RTMP 스트림 이름에 따라 HLS 파일이 생성됨 (jetson1, jetson2, jetson3)
+    const hlsStreamUrls = {
+      1: 'https://agrilook-be-stream.koreacentral.cloudapp.azure.com/hls/jetson1.m3u8',
+      2: 'https://agrilook-be-stream.koreacentral.cloudapp.azure.com/hls/jetson2.m3u8', 
+      3: 'https://agrilook-be-stream.koreacentral.cloudapp.azure.com/hls/jetson3.m3u8'
+    };
     
-    // hls.js가 지원되는 경우
-    if (window.Hls && window.Hls.isSupported()) {
-      const hls = new window.Hls();
-      hls.loadSource(`${streamUrl}/stream.m3u8`);
-      hls.attachMedia(video);
-      
-      hls.on(window.Hls.Events.MANIFEST_PARSED, () => {
-        console.log('HLS 스트림 로드 완료');
-      });
-      
-      hls.on(window.Hls.Events.ERROR, (event: any, data: any) => {
-        console.error('HLS 에러:', data);
-      });
-    } 
-    // 네이티브 HLS 지원 (Safari 등)
-    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = `${streamUrl}/stream.m3u8`;
-      video.addEventListener('loadedmetadata', () => {
-        console.log('네이티브 HLS 스트림 로드 완료');
-      });
-    }
-    // 지원되지 않는 경우
-    else {
-      console.error('HLS가 지원되지 않는 브라우저입니다.');
-    }
+    const videoUrl = hlsStreamUrls[cctvId as keyof typeof hlsStreamUrls] || hlsStreamUrls[1];
+    
+    console.log('StreamPlayer 내부 - cctvId:', cctvId);
+    console.log('StreamPlayer 내부 - videoUrl:', videoUrl);
+    console.log('StreamPlayer 내부 - hlsStreamUrls:', hlsStreamUrls);
+    
+    let hls: Hls | null = null;
+
+    const loadStream = async () => {
+      try {
+        if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          // 네이티브 HLS 지원 (Safari)
+          video.src = videoUrl;
+          video.addEventListener('loadedmetadata', () => {
+            console.log(`CCTV ${cctvId} 비디오 로드 완료 (네이티브 HLS)`);
+            setIsLoading(false);
+          });
+        } else if (Hls.isSupported()) {
+          // HLS.js 라이브러리 사용 (다른 브라우저)
+          hls = new Hls({
+            debug: false,
+            enableWorker: true,
+            lowLatencyMode: true,
+            backBufferLength: 90
+          });
+          
+          hls.loadSource(videoUrl);
+          hls.attachMedia(video);
+          
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            console.log(`CCTV ${cctvId} HLS 스트림 로드 완료`);
+            setIsLoading(false);
+            video.play().catch(e => console.log('자동 재생 실패:', e));
+          });
+          
+          hls.on(Hls.Events.ERROR, (event, data) => {
+            console.error(`CCTV ${cctvId} HLS 에러:`, data);
+            if (data.fatal) {
+              setError('스트림 연결 실패');
+              setIsLoading(false);
+            }
+          });
+        } else {
+          // HLS 지원하지 않는 브라우저
+          console.log(`CCTV ${cctvId}: HLS 지원하지 않는 브라우저`);
+          setError('브라우저가 HLS를 지원하지 않습니다');
+          setIsLoading(false);
+        }
+        
+        video.addEventListener('error', () => {
+          console.error(`CCTV ${cctvId} 비디오 로드 실패`);
+          setError('스트림 연결 실패');
+          setIsLoading(false);
+        });
+        
+      } catch (error) {
+        console.error(`CCTV ${cctvId} 스트림 로드 중 오류:`, error);
+        setError('스트림 연결 실패');
+        setIsLoading(false);
+      }
+    };
+
+    loadStream();
 
     // 컴포넌트 언마운트 시 정리
     return () => {
-      if (window.Hls && video) {
-        const hls = window.Hls.getInstance(video);
-        if (hls) {
-          hls.destroy();
-        }
+      if (hls) {
+        hls.destroy();
+      }
+      if (video) {
+        video.src = '';
+        video.load();
       }
     };
-  }, []);
+  }, [cctvId]);
+
+  if (error) {
+    return (
+      <div className={`w-full h-full flex items-center justify-center bg-gray-900 rounded-lg ${className}`}>
+        <div className="text-center text-white">
+          <div className="text-sm text-red-400 mb-2">⚠️ {error}</div>
+          <div className="text-xs text-gray-400">CCTV {cctvId}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <video 
+    <div className={`relative w-full h-full ${className}`}>
+      <video
         ref={videoRef} 
-        controls 
-        className="w-full rounded-lg shadow-lg"
-        style={{ 
-          width: '100%', 
-          maxWidth: '800px',
-          backgroundColor: '#000'
-        }}
-        poster="/placeholder.jpg" // 로딩 중 표시할 이미지
+        controls={showControls}
+        className="w-full h-full rounded-lg object-contain"
+        style={{ backgroundColor: '#000' }}
+        poster="/placeholder.jpg"
+        autoPlay
+        muted
+        loop
       />
-      <div className="mt-4 text-center text-sm text-gray-600">
-        실시간 농장 모니터링 스트림
-      </div>
+      
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
+          <div className="text-center text-white">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+            <div className="text-sm">스트림 연결 중...</div>
+          </div>
+        </div>
+      )}
+      
+      {showInfo && (
+        <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+          CCTV {cctvId} 실시간
+        </div>
+      )}
     </div>
   );
 };
 
 // 스트림 상태를 확인하는 컴포넌트
-export const StreamStatus = () => {
-  const [isOnline, setIsOnline] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
+export const StreamStatus = ({ cctvId = 1 }: { cctvId?: number }) => {
+  const [status, setStatus] = useState<'online' | 'offline' | 'checking'>('checking');
+  
   useEffect(() => {
     const checkStreamStatus = async () => {
       try {
-        const response = await fetch('/hls/stream.m3u8', { method: 'HEAD' });
-        setIsOnline(response.ok);
-        setError(null);
-      } catch (err) {
-        setIsOnline(false);
-        setError('스트림에 연결할 수 없습니다.');
+        const streamUrl = `https://agrilook-be-stream.koreacentral.cloudapp.azure.com/hls/jetson${cctvId}.m3u8`;
+        
+        const response = await fetch(streamUrl, {
+          method: 'HEAD',
+          mode: 'cors'
+        });
+        
+        if (response.ok) {
+          setStatus('online');
+        } else {
+          setStatus('offline');
+        }
+      } catch (error) {
+        console.error(`CCTV ${cctvId} 스트림 상태 확인 실패:`, error);
+        setStatus('offline');
       }
     };
 
     checkStreamStatus();
-    const interval = setInterval(checkStreamStatus, 30000); // 30초마다 체크
-
+    
+    // 30초마다 상태 확인
+    const interval = setInterval(checkStreamStatus, 30000);
+    
     return () => clearInterval(interval);
-  }, []);
-
+  }, [cctvId]);
+  
   return (
-    <div className="flex items-center gap-2">
-      <div className={`w-3 h-3 rounded-full ${isOnline ? 'bg-green-500' : 'bg-red-500'}`} />
-      <span className="text-sm">
-        {isOnline ? '스트림 온라인' : error || '스트림 오프라인'}
+    <div className="flex items-center space-x-1">
+      <div className={`w-2 h-2 rounded-full ${
+        status === 'online' ? 'bg-green-500' :
+        status === 'offline' ? 'bg-red-500' : 'bg-yellow-500'
+      }`}></div>
+      <span className="text-xs text-white bg-black/70 px-1 rounded">
+        {status === 'online' ? 'ON' : 
+         status === 'offline' ? 'OFF' : 'CHK'}
       </span>
     </div>
   );

@@ -13,7 +13,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://agrilook-be-stream.koreacentral.cloudapp.azure.com/api/:path*',
+        destination: 'https://agrilook-be.koreacentral.cloudapp.azure.com/api/:path*',
       },
       {
         source: '/hls/:path*',
