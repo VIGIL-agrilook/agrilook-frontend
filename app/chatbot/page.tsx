@@ -8,6 +8,9 @@ import { Card, CardContent } from '@/components/ui/card'
 import { ResponsiveH1, ResponsiveP, ResponsiveSmall } from '@/components/ui/typography'
 import Image from 'next/image'
 import { apiService } from '@/lib/api'
+import { MicButton } from '@/components/mic-button'
+import { MessageItem } from '@/components/message-item'
+import { useTTS } from '@/lib/hooks/useTTS'
 
 interface Message {
   id: number
@@ -28,6 +31,14 @@ export default function ChatbotPage() {
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  
+  // TTS 훅 사용
+  const { speak } = useTTS({
+    language: 'ko-KR',
+    rate: 1,
+    pitch: 1,
+    volume: 1
+  })
 
   // 메시지 내 간단한 마크다운(제목/테이블) 렌더러
   const renderMessageContent = (text: string) => {
@@ -136,12 +147,15 @@ export default function ChatbotPage() {
     scrollToBottom()
   }, [messages])
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading) return
+  const handleSendMessage = async (messageText?: string) => {
+    const textToSend = messageText || inputValue
+    if (!textToSend.trim() || isLoading) {
+      return
+    }
 
     const userMessage: Message = {
       id: messages.length + 1,
-      text: inputValue,
+      text: textToSend,
       isUser: true,
       timestamp: new Date()
     }
@@ -152,17 +166,32 @@ export default function ChatbotPage() {
     setIsLoading(true)
 
     try {
-      // 백엔드 API 호출
-      const response = await apiService.sendChatMessage(inputValue)
+      // 백엔드 API 호출 - 직접 fetch 사용
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: textToSend }),
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+      
+      const data = await response.json()
       
       const botResponse: Message = {
         id: messages.length + 2,
-        text: response.answer,
+        text: data.answer,
         isUser: false,
         timestamp: new Date()
       }
 
       setMessages(prev => [...prev, botResponse])
+      
+      // TTS 자동 재생 비활성화 - 버튼으로 제어
+      // speak(data.answer)
     } catch (error) {
       console.error('챗봇 API 호출 오류:', error)
       
@@ -179,11 +208,37 @@ export default function ChatbotPage() {
     }
   }
 
+  // 음성 인식 transcript 변경 핸들러
+  const handleTranscriptChange = (transcript: string) => {
+    setInputValue(transcript)
+  }
+
+  // 음성 인식 최종 transcript 핸들러
+  const handleTranscriptFinal = (transcript: string) => {
+    handleSendMessage(transcript)
+  }
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      handleSendMessage()
+      
+      // 한글 입력 완료를 위해 잠시 대기
+      setTimeout(() => {
+        handleSendMessage()
+      }, 10)
     }
+  }
+
+  const handleCompositionStart = () => {
+    console.log('한글 입력 시작')
+  }
+
+  const handleCompositionEnd = () => {
+    console.log('한글 입력 완료')
+  }
+
+  const handleSendButtonClick = () => {
+    handleSendMessage()
   }
 
   return (
@@ -229,23 +284,14 @@ export default function ChatbotPage() {
             {/* 메시지 영역 - 스크롤 가능 */}
             <div className="flex-1 overflow-y-auto space-y-3 md:space-y-4 mb-4">
               {messages.map((message) => (
-                <div
+                <MessageItem
                   key={message.id}
-                  className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[92%] md:max-w-2xl lg:max-w-3xl px-3 py-2 md:px-4 md:py-3 rounded-lg ${
-                      message.isUser
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted text-foreground'
-                    }`}
-                  >
-                    <div className="break-words">{renderMessageContent(message.text)}</div>
-                    <ResponsiveSmall className="opacity-70 mt-1 block">
-                      {message.timestamp.toLocaleTimeString()}
-                    </ResponsiveSmall>
-                  </div>
-                </div>
+                  id={message.id}
+                  text={message.text}
+                  isUser={message.isUser}
+                  timestamp={message.timestamp}
+                  renderMessageContent={renderMessageContent}
+                />
               ))}
               {/* 스크롤을 맨 아래로 이동시키기 위한 빈 div */}
               <div ref={messagesEndRef} />
@@ -271,8 +317,15 @@ export default function ChatbotPage() {
             placeholder="농업 관련 질문을 입력하세요..."
             className="flex-1"
           />
+          {/* 음성 인식 버튼 */}
+          <MicButton
+            onTranscriptChange={handleTranscriptChange}
+            onTranscriptFinal={handleTranscriptFinal}
+            disabled={isLoading}
+            className="bg-primary text-primary-foreground"
+          />
           <Button 
-            onClick={handleSendMessage}
+            onClick={handleSendButtonClick}
             disabled={isLoading}
             className="bg-primary text-primary-foreground px-4 md:px-6"
           >

@@ -69,46 +69,111 @@ export interface ChatResponse {
   source: string[];
 }
 
+// 재시도 로직을 포함한 fetch 함수
+async function fetchWithRetry(url: string, options: RequestInit, maxRetries = 2): Promise<Response> {
+  let lastError: Error;
+  
+  for (let i = 0; i <= maxRetries; i++) {
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: AbortSignal.timeout(10000) // 10초 타임아웃
+      });
+      return response;
+    } catch (error) {
+      lastError = error as Error;
+      console.warn(`API 호출 실패 (시도 ${i + 1}/${maxRetries + 1}):`, error);
+      
+      if (i < maxRetries) {
+        // 지수 백오프: 1초, 2초, 4초 대기
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+      }
+    }
+  }
+  
+  throw lastError!;
+}
+
 export const apiClient = {
   async get(endpoint: string) {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return response.json();
+    try {
+      const response = await fetchWithRetry(`${API_BASE_URL}${endpoint}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      return response.json();
+    } catch (error) {
+      console.error(`GET ${endpoint} 실패:`, error);
+      throw error;
+    }
   },
   
   async post(endpoint: string, data: any) {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return response.json();
+    try {
+      const response = await fetchWithRetry(`${API_BASE_URL}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      return response.json();
+    } catch (error) {
+      console.error(`POST ${endpoint} 실패:`, error);
+      throw error;
+    }
   },
 
   async put(endpoint: string, data: any) {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return response.json();
+    try {
+      const response = await fetchWithRetry(`${API_BASE_URL}${endpoint}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      return response.json();
+    } catch (error) {
+      console.error(`PUT ${endpoint} 실패:`, error);
+      throw error;
+    }
   },
 
   async delete(endpoint: string) {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return response.json();
+    try {
+      const response = await fetchWithRetry(`${API_BASE_URL}${endpoint}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      return response.json();
+    } catch (error) {
+      console.error(`DELETE ${endpoint} 실패:`, error);
+      throw error;
+    }
   }
 };
 

@@ -13,20 +13,24 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
     
-    // 백엔드 연결 시도
+    console.log('비료 추천 요청:', { cropname, farmid });
+    
+    // 백엔드 연결 시도 (타임아웃 제거)
     try {
       const response = await fetch(`${BACKEND_BASE_URL}/api/fertilizer-recommendation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ cropname, farmid }),
+        body: JSON.stringify({ cropname, farmid })
       });
       
       if (response.ok) {
         const data = await response.json();
         console.log('백엔드에서 받은 비료 추천 데이터:', data);
         return NextResponse.json(data);
+      } else {
+        console.log('백엔드 응답 오류:', response.status, response.statusText);
       }
     } catch (backendError) {
       console.log('백엔드 연결 실패, 모의 비료 데이터 사용:', backendError);
@@ -41,78 +45,56 @@ export async function POST(request: NextRequest) {
       },
       compost: {
         cattle_kg: 500,
-        chicken_kg: 300,
-        mixed_kg: 200,
-        pig_kg: 400
+        chicken_kg: 200,
+        mixed_kg: 300,
+        pig_kg: 150
       },
       fertilizer: {
         base: [
           {
-            K_ratio: 5,
-            N_ratio: 12,
-            P_ratio: 6,
-            bags: 2,
-            fertilizer_id: 'base_001',
-            fertilizer_name: '고추특호',
-            need_K_kg: 10,
-            need_N_kg: 24,
-            need_P_kg: 12,
-            shortage_K_kg: 0,
+            fertilizer_id: 'fert_001',
+            fertilizer_name: '복합비료 15-15-15',
+            N_ratio: 15,
+            P_ratio: 15,
+            K_ratio: 15,
+            need_N_kg: 120,
+            need_P_kg: 80,
+            need_K_kg: 100,
+            shortage_N_kg: 0,
             shortage_P_kg: 0,
-            usage_kg: 40
-          },
-          {
-            K_ratio: 8,
-            N_ratio: 11,
-            P_ratio: 6,
-            bags: 1,
-            fertilizer_id: 'base_002',
-            fertilizer_name: '고추전용',
-            need_K_kg: 16,
-            need_N_kg: 22,
-            need_P_kg: 12,
             shortage_K_kg: 0,
-            shortage_P_kg: 0,
-            usage_kg: 20
+            usage_kg: 800,
+            bags: 16
           }
         ],
         additional: [
           {
-            K_ratio: 10,
-            N_ratio: 13,
+            fertilizer_id: 'fert_002',
+            fertilizer_name: '칼륨비료',
+            N_ratio: 0,
             P_ratio: 0,
-            bags: 1,
-            fertilizer_id: 'add_001',
-            fertilizer_name: '맞춤추비29호',
-            need_K_kg: 20,
-            need_N_kg: 26,
+            K_ratio: 50,
+            need_N_kg: 0,
             need_P_kg: 0,
-            shortage_K_kg: 0,
+            need_K_kg: 50,
+            shortage_N_kg: 0,
             shortage_P_kg: 0,
-            usage_kg: 20
+            shortage_K_kg: 0,
+            usage_kg: 100,
+            bags: 2
           }
         ]
-      }
+      },
+      message: '모의 데이터 (백엔드 연결 실패)'
     };
     
+    console.log('모의 비료 추천 데이터 사용:', mockFertilizerData);
     return NextResponse.json(mockFertilizerData);
     
   } catch (error) {
     console.error('비료 추천 API 오류:', error);
     return NextResponse.json({ 
-      error: '비료 추천을 가져올 수 없습니다.',
-      _id: '',
-      crop: { code: '', name: '' },
-      compost: {
-        cattle_kg: 0,
-        chicken_kg: 0,
-        mixed_kg: 0,
-        pig_kg: 0
-      },
-      fertilizer: {
-        additional: [],
-        base: []
-      }
+      error: '서버 내부 오류가 발생했습니다.' 
     }, { status: 500 });
   }
 }

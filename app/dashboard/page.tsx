@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Navigation from '@/components/navigation'
 import CropSection from '@/components/crop-section'
 import SoilWeatherSection from '@/components/soil-weather-section'
@@ -9,21 +9,59 @@ import CompostSection from '@/components/compost-section'
 import SoilChartSection from '@/components/soil-chart-section'
 import FloatingChatButton from '@/components/floating-chat-button'
 import { Button } from '@/components/ui/button'
-import { apiService } from '@/lib/api'
 
 export default function DashboardPage() {
   const [isPremium, setIsPremium] = useState(false)
   const [selectedCrop, setSelectedCrop] = useState<string>('토마토') // 기본값으로 토마토 선택
   const [weatherData, setWeatherData] = useState<any>(null)
+  const [weatherLoading, setWeatherLoading] = useState(true)
+  const [weatherError, setWeatherError] = useState<string | null>(null)
+  const isInitialFetch = useRef(false)
 
   // 날씨 데이터 가져오기
   useEffect(() => {
     const fetchWeatherData = async () => {
+      // 이미 초기 호출이 완료되었으면 스킵 (Strict Mode 대응)
+      if (isInitialFetch.current) {
+        return
+      }
+      
       try {
-        const response = await apiService.getCurrentWeather()
-        setWeatherData(response.data)
+        setWeatherLoading(true)
+        setWeatherError(null)
+        
+        console.log('날씨 데이터 가져오기 시작...')
+        // 직접 fetch 사용 (재시도 없음)
+        const response = await fetch('/api/weather/current')
+        console.log('날씨 API 응답:', response)
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        
+        const data = await response.json()
+        console.log('날씨 API 데이터:', data)
+        
+        if (data && data.data) {
+          setWeatherData(data.data)
+          console.log('날씨 데이터 설정 완료:', data.data)
+        } else {
+          throw new Error('날씨 데이터가 올바르지 않습니다')
+        }
       } catch (error) {
         console.error('날씨 데이터 가져오기 오류:', error)
+        setWeatherError(error instanceof Error ? error.message : '날씨 데이터를 가져올 수 없습니다')
+        
+        // 에러 시에도 기본 데이터 설정
+        setWeatherData({
+          temperature: 22,
+          humidity: 65,
+          precipitation: 0,
+          weather: '맑음'
+        })
+      } finally {
+        setWeatherLoading(false)
+        isInitialFetch.current = true
       }
     }
 
@@ -48,6 +86,15 @@ export default function DashboardPage() {
       
       <main className="container mx-auto px-2 py-3 sm:px-4 sm:py-8 pt-20">
         <h1 className="text-2xl sm:text-3xl font-bold text-farm-brown mb-4 sm:mb-8">대시보드</h1>
+        
+        {/* 날씨 데이터 상태 표시 (디버깅용) */}
+        {weatherError && (
+          <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <p className="text-sm text-yellow-800">
+              ⚠️ 날씨 데이터 로드 중 오류: {weatherError}
+            </p>
+          </div>
+        )}
         
         {/* 행별 동일 높이 그리드 레이아웃 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-5">

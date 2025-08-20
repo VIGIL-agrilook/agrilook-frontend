@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ResponsiveH3, ResponsiveP, ResponsiveSmall } from '@/components/ui/typography'
-import WeatherSection from './weather-section'
 import { SoilSensorData } from '@/lib/types'
 
 interface SoilWeatherSectionProps {
@@ -148,22 +147,23 @@ export default function SoilWeatherSection({ isPremium, weatherData }: SoilWeath
             <div className="text-3xl md:text-5xl mb-1 md:mb-2">
               {weatherData?.weather === 'rain' ? '🌧️' : 
                weatherData?.weather === 'cloudy' ? '☁️' : 
-               weatherData?.weather === 'snow' ? '❄️' : '☀️'}
+               weatherData?.weather === 'snow' ? '❄️' : 
+               weatherData?.weather === '맑음' ? '☀️' : '☀️'}
             </div>
             <div className="text-lg md:text-2xl font-bold text-blue-900 mb-2 md:mb-3">
-              {weatherData ? `${weatherData.temperature}°C` : '--°C'}
+              {weatherData && typeof weatherData.temperature === 'number' ? `${weatherData.temperature}°C` : '--°C'}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 md:gap-2 w-full">
               <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center flex items-center justify-center">
                 <span className="text-[8px] sm:text-[10px] md:text-fluid-xs text-blue-700 font-medium">습도</span>
                 <span className="text-[10px] sm:text-xs md:text-fluid-sm font-bold text-blue-900 ml-1">
-                  {weatherData ? `${weatherData.humidity}%` : '--%'}
+                  {weatherData && typeof weatherData.humidity === 'number' ? `${weatherData.humidity}%` : '--%'}
                 </span>
               </div>
               <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center flex items-center justify-center">
                 <span className="text-[8px] sm:text-[10px] md:text-fluid-xs text-blue-700 font-medium">강수량</span>
                 <span className="text-[10px] sm:text-xs md:text-fluid-sm font-bold text-blue-900 ml-1">
-                  {weatherData ? `${weatherData.precipitation}mm` : '--mm'}
+                  {weatherData && typeof weatherData.precipitation === 'number' ? `${weatherData.precipitation}mm` : '--mm'}
                 </span>
               </div>
             </div>
@@ -199,12 +199,6 @@ export default function SoilWeatherSection({ isPremium, weatherData }: SoilWeath
             </div>
           ))}
         </div>
-
-        {/* 날씨 정보 섹션 */}
-        <div className="mt-6">
-          <WeatherSection weatherData={weatherData} />
-        </div>
-        
       </CardContent>
     </Card>
   )
