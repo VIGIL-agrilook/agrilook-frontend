@@ -151,19 +151,19 @@ export default function SoilWeatherSection({ isPremium, weatherData }: SoilWeath
                weatherData?.weather === 'snow' ? '❄️' : '☀️'}
             </div>
             <div className="text-lg md:text-2xl font-bold text-blue-900 mb-2 md:mb-3">
-              {weatherData ? `${weatherData.temperature}°C` : '24°C'}
+              {weatherData ? `${weatherData.temperature}°C` : '--°C'}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 md:gap-2 w-full">
               <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center flex items-center justify-center">
                 <span className="text-[8px] sm:text-[10px] md:text-fluid-xs text-blue-700 font-medium">습도</span>
                 <span className="text-[10px] sm:text-xs md:text-fluid-sm font-bold text-blue-900 ml-1">
-                  {weatherData ? `${weatherData.humidity}%` : '65%'}
+                  {weatherData ? `${weatherData.humidity}%` : '--%'}
                 </span>
               </div>
               <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center flex items-center justify-center">
                 <span className="text-[8px] sm:text-[10px] md:text-fluid-xs text-blue-700 font-medium">강수량</span>
                 <span className="text-[10px] sm:text-xs md:text-fluid-sm font-bold text-blue-900 ml-1">
-                  {weatherData ? `${weatherData.precipitation}mm` : '0mm'}
+                  {weatherData ? `${weatherData.precipitation}mm` : '--mm'}
                 </span>
               </div>
             </div>
