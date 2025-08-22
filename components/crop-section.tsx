@@ -10,24 +10,21 @@ interface CropSectionProps {
 export default function CropSection({ onCropSelect, selectedCrop }: CropSectionProps) {
   const crops = [
     { 
-      name: '오이', 
-      icon: '🥒', 
+      name: '대파', 
       status: '생육 양호',
-      action: '덩굴 유인 및 적심으로 통풍·채광 확보',
+      action: '적절한 간격 유지 및 통풍 확보',
       statusColor: 'bg-green-100 text-green-800'
     },
     { 
-      name: '토마토', 
-      icon: '🍅', 
-      status: '개화기',
-      action: '인공수분(진동·벌 이용)으로 착과율 향상',
+      name: '부추', 
+      status: '수확기',
+      action: '잎이 20-30cm일 때 수확하여 연속 수확',
       statusColor: 'bg-blue-100 text-blue-800'
     },
     { 
-      name: '배추', 
-      icon: '🥬', 
-      status: '결구기',
-      action: '뿌리혹병·무름병 예방 철저',
+      name: '고추', 
+      status: '개화기',
+      action: '적정 온도 유지 및 수분 공급으로 착과율 향상',
       statusColor: 'bg-orange-100 text-orange-800'
     }
   ]
@@ -52,9 +49,6 @@ export default function CropSection({ onCropSelect, selectedCrop }: CropSectionP
               onClick={() => onCropSelect(crop.name)}
             >
               <div className="flex items-center space-fluid-base">
-                {/* 아이콘 */}
-                <span className="text-fluid-2xl flex-shrink-0">{crop.icon}</span>
-                
                 {/* 작물 이름과 상태 */}
                 <div className="flex-shrink-0">
                   <ResponsiveP className="font-semibold text-foreground">{crop.name}</ResponsiveP>

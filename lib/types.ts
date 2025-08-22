@@ -3,15 +3,16 @@ export interface SoilSensorData {
   id: string;
   timestamp: string;
   location: string;
+  source: 'satellite' | 'sensor'; // 데이터 소스 구분
   soilData: {
-    nitrogen: number; // 질소 (N) - mg/kg
-    phosphorus: number; // 인산 (P) - mg/kg
-    potassium: number; // 칼륨 (K) - mg/kg
-    pH: number; // pH 값
-    organicMatter: number; // 유기물 함량 (%)
-    moisture: number; // 토양 수분 (%)
-    temperature: number; // 토양 온도 (°C)
-    conductivity: number; // 전기전도도 (mS/cm)
+    nitrogen: number | string; // 질소 (N) - mg/kg 또는 범위 문자열
+    phosphorus: number | string; // 인산 (P) - mg/kg 또는 범위 문자열
+    potassium: number | string; // 칼륨 (K) - mg/kg 또는 범위 문자열
+    pH: number | string; // pH 값 또는 범위 문자열
+    organicMatter: number | string; // 유기물 함량 (%) 또는 범위 문자열
+    moisture: number | string; // 토양 수분 (%) 또는 범위 문자열
+    temperature: number | string; // 토양 온도 (°C) 또는 범위 문자열
+    conductivity: number | string; // 전기전도도 (mS/cm) 또는 범위 문자열
   };
   notes?: string; // 추가 메모
 }

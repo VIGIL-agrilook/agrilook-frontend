@@ -217,3 +217,139 @@ export const apiService = {
     return apiClient.get(`/weather/agricultural-summary?station=${station}`);
   }
 };
+
+// 비료 추천 API
+export async function fetchFertilizerRecommendation(cropName: string, farmId: string = 'farm0001') {
+  try {
+    // Azure 백엔드에서 받아오도록 수정
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://agrilook-be-stream.koreacentral.cloudapp.azure.com/api';
+    const response = await fetch(`${API_BASE_URL}/fertilizer-recommendation`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        cropname: cropName,
+        farmid: farmId
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('비료 추천 API 호출 중 오류:', error)
+    // 에러 시 더미 데이터 반환
+    return getDummyFertilizerData(cropName)
+  }
+}
+
+// 더미 비료 추천 데이터
+function getDummyFertilizerData(cropName: string) {
+  return {
+    _id: 'dummy_001',
+    crop: {
+      code: 'CROP001',
+      name: cropName
+    },
+    compost: {
+      cattle_kg: 500.0,
+      chicken_kg: 300.0,
+      mixed_kg: 400.0,
+      pig_kg: 350.0
+    },
+    fertilizer: {
+      additional: [
+        {
+          K_ratio: 0.3,
+          N_ratio: 0.4,
+          P_ratio: 0.3,
+          bags: 2.0,
+          fertilizer_id: 'FERT001',
+          fertilizer_name: '웃거름 복합비료',
+          need_K_kg: 15.0,
+          need_N_kg: 20.0,
+          need_P_kg: 15.0,
+          shortage_K_kg: 5.0,
+          shortage_P_kg: 3.0,
+          usage_kg: 50.0
+        },
+        {
+          K_ratio: 0.2,
+          N_ratio: 0.5,
+          P_ratio: 0.3,
+          bags: 1.5,
+          fertilizer_id: 'FERT002',
+          fertilizer_name: '웃거름 질소비료',
+          need_K_kg: 10.0,
+          need_N_kg: 25.0,
+          need_P_kg: 15.0,
+          shortage_K_kg: 2.0,
+          shortage_P_kg: 1.0,
+          usage_kg: 37.5
+        },
+        {
+          K_ratio: 0.4,
+          N_ratio: 0.3,
+          P_ratio: 0.3,
+          bags: 1.0,
+          fertilizer_id: 'FERT003',
+          fertilizer_name: '웃거름 칼리비료',
+          need_K_kg: 20.0,
+          need_N_kg: 15.0,
+          need_P_kg: 15.0,
+          shortage_K_kg: 8.0,
+          shortage_P_kg: 2.0,
+          usage_kg: 25.0
+        }
+      ],
+      base: [
+        {
+          K_ratio: 0.3,
+          N_ratio: 0.4,
+          P_ratio: 0.3,
+          bags: 3.0,
+          fertilizer_id: 'BASE001',
+          fertilizer_name: '밑거름 복합비료',
+          need_K_kg: 30.0,
+          need_N_kg: 40.0,
+          need_P_kg: 30.0,
+          shortage_K_kg: 10.0,
+          shortage_P_kg: 5.0,
+          usage_kg: 75.0
+        },
+        {
+          K_ratio: 0.2,
+          N_ratio: 0.5,
+          P_ratio: 0.3,
+          bags: 2.5,
+          fertilizer_id: 'BASE002',
+          fertilizer_name: '밑거름 질소비료',
+          need_K_kg: 20.0,
+          need_N_kg: 50.0,
+          need_P_kg: 30.0,
+          shortage_K_kg: 5.0,
+          shortage_P_kg: 3.0,
+          usage_kg: 62.5
+        },
+        {
+          K_ratio: 0.4,
+          N_ratio: 0.3,
+          P_ratio: 0.3,
+          bags: 2.0,
+          fertilizer_id: 'BASE003',
+          fertilizer_name: '밑거름 칼리비료',
+          need_K_kg: 40.0,
+          need_N_kg: 30.0,
+          need_P_kg: 30.0,
+          shortage_K_kg: 15.0,
+          shortage_P_kg: 8.0,
+          usage_kg: 50.0
+        }
+      ]
+    }
+  }
+}

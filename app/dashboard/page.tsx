@@ -9,45 +9,38 @@ import CompostSection from '@/components/compost-section'
 import SoilChartSection from '@/components/soil-chart-section'
 import FloatingChatButton from '@/components/floating-chat-button'
 import { Button } from '@/components/ui/button'
+import { fetchFertilizerRecommendation } from '@/lib/api'
 
 export default function DashboardPage() {
   const [isPremium, setIsPremium] = useState(false)
-  const [selectedCrop, setSelectedCrop] = useState<string>('토마토') // 기본값으로 토마토 선택
-  const [weatherData, setWeatherData] = useState<any>(null)
+  const [selectedCrop, setSelectedCrop] = useState('')
+  const [weatherData, setWeatherData] = useState<{
+    temperature: number
+    humidity: number
+    precipitation: number
+    weather: string
+  } | null>(null)
   const [weatherLoading, setWeatherLoading] = useState(true)
   const [weatherError, setWeatherError] = useState<string | null>(null)
+  const [showSensorData, setShowSensorData] = useState(false)
+  const [fertilizerData, setFertilizerData] = useState<any>(null)
+  const [fertilizerLoading, setFertilizerLoading] = useState(false)
   const isInitialFetch = useRef(false)
 
   // 날씨 데이터 가져오기
   useEffect(() => {
     const fetchWeatherData = async () => {
-      // 이미 초기 호출이 완료되었으면 스킵 (Strict Mode 대응)
-      if (isInitialFetch.current) {
-        return
-      }
-      
       try {
-        setWeatherLoading(true)
-        setWeatherError(null)
-        
-        console.log('날씨 데이터 가져오기 시작...')
-        // 직접 fetch 사용 (재시도 없음)
         const response = await fetch('/api/weather/current')
-        console.log('날씨 API 응답:', response)
-        
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+          throw new Error(`HTTP error! status: ${response.status}`)
         }
+        const result = await response.json()
         
-        const data = await response.json()
-        console.log('날씨 API 데이터:', data)
-        
-        if (data && data.data) {
-          setWeatherData(data.data)
-          console.log('날씨 데이터 설정 완료:', data.data)
-        } else {
-          throw new Error('날씨 데이터가 올바르지 않습니다')
-        }
+        // API 응답 구조에 맞게 데이터 추출
+        const data = result.data || result
+        setWeatherData(data)
+        setWeatherError(null)
       } catch (error) {
         console.error('날씨 데이터 가져오기 오류:', error)
         setWeatherError(error instanceof Error ? error.message : '날씨 데이터를 가져올 수 없습니다')
@@ -76,8 +69,25 @@ export default function DashboardPage() {
     setIsPremium(true)
   }
 
-  const handleCropSelect = (cropName: string) => {
+  const handleSoilDiagnosis = () => {
+    setShowSensorData(true)
+  }
+
+  const handleCropSelect = async (cropName: string) => {
     setSelectedCrop(cropName)
+    
+    // 작물 선택 시 비료 추천 데이터 가져오기
+    if (cropName) {
+      setFertilizerLoading(true)
+      try {
+        const data = await fetchFertilizerRecommendation(cropName)
+        setFertilizerData(data)
+      } catch (error) {
+        console.error('비료 추천 데이터 가져오기 오류:', error)
+      } finally {
+        setFertilizerLoading(false)
+      }
+    }
   }
 
   return (
@@ -105,16 +115,20 @@ export default function DashboardPage() {
           </div>
           
           <div className="lg:h-[450px]">
-            <SoilWeatherSection isPremium={isPremium} weatherData={weatherData} />
+            <SoilWeatherSection 
+              isPremium={isPremium} 
+              weatherData={weatherData} 
+              showSensorData={showSensorData}
+            />
           </div>
           
           {/* 2행: 토양 진단 버튼 (전체 너비) */}
-          {!isPremium && (
+          {!isPremium && !showSensorData && (
             <div className="lg:col-span-2">
               <div className="flex items-center justify-center bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border-2 border-dashed border-green-300 p-4 h-[96px] sm:p-8 sm:h-[120px]">
                 <div className="text-center">
                   <Button 
-                    onClick={handlePremiumUpgrade}
+                    onClick={handleSoilDiagnosis}
                     className="bg-green-600 hover:bg-green-700 text-white text-lg px-6 py-4 sm:text-xl sm:px-12 sm:py-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200"
                     size="lg"
                   >
@@ -129,16 +143,24 @@ export default function DashboardPage() {
           )}
           
           {/* 3행: 비료 관리와 퇴비 관리 - 동일 높이 */}
-          <div className={`${isPremium ? 'premium-section' : 'blur-section'} lg:h-[420px]`}>
-            <FertilizerSection selectedCrop={selectedCrop} />
+          <div className={`${isPremium || showSensorData || selectedCrop ? 'premium-section' : 'blur-section'} lg:h-[420px]`}>
+            <FertilizerSection 
+              selectedCrop={selectedCrop} 
+              fertilizerData={fertilizerData}
+              isLoading={fertilizerLoading}
+            />
           </div>
           
-          <div className={`${isPremium ? 'premium-section' : 'blur-section'} lg:h-[420px]`}>
-            <CompostSection selectedCrop={selectedCrop} />
+          <div className={`${isPremium || showSensorData || selectedCrop ? 'premium-section' : 'blur-section'} lg:h-[420px]`}>
+            <CompostSection 
+              selectedCrop={selectedCrop} 
+              compostData={fertilizerData?.compost}
+              isLoading={fertilizerLoading}
+            />
           </div>
           
           {/* 4행: 시계열 그래프 (전체 너비) */}
-          <div className={`lg:col-span-2 lg:h-[500px] ${isPremium ? 'premium-section' : 'blur-section'}`}>
+          <div className={`lg:col-span-2 lg:h-[500px] ${isPremium || showSensorData || selectedCrop ? 'premium-section' : 'blur-section'}`}>
             <SoilChartSection />
           </div>
         </div>
