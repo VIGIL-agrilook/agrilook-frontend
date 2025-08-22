@@ -1,9 +1,8 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/home/page": "app/home/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
+  "/page": "app/page.js",
+  "/api/weather/current/route": "app/api/weather/current/route.js",
   "/monitoring/page": "app/monitoring/page.js",
-  "/chatbot/page": "app/chatbot/page.js",
-  "/api/chat/route": "app/api/chat/route.js",
-  "/api/weather/current/route": "app/api/weather/current/route.js"
+  "/dashboard/page": "app/dashboard/page.js"
 }
