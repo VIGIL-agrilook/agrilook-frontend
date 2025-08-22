@@ -32,7 +32,13 @@ export default function Navigation() {
             />
             
             {/* 브랜드명 */}
-            <span className="text-xl md:text-2xl font-bold text-white">들여다밭</span>
+            <div className="flex items-center space-x-2">
+              <span className="text-xl md:text-2xl font-bold text-white">들여다밭</span>
+              {/* 웹 화면에서만 표시되는 서브타이틀 */}
+              <span className="hidden md:inline text-sm md:text-base text-green-100 font-normal">
+                올인원 AI 농지 관리 플랫폼
+              </span>
+            </div>
           </Link>
 
           {/* 네비게이션 메뉴 */}

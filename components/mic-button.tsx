@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 interface MicButtonProps {
   onTranscriptChange: (transcript: string) => void
   onTranscriptFinal: (transcript: string) => void
+  onListeningChange?: (isListening: boolean) => void
   disabled?: boolean
   className?: string
 }
@@ -15,6 +16,7 @@ interface MicButtonProps {
 export function MicButton({ 
   onTranscriptChange, 
   onTranscriptFinal, 
+  onListeningChange,
   disabled = false,
   className = ''
 }: MicButtonProps) {
@@ -37,6 +39,13 @@ export function MicButton({
     onTranscriptChange(transcript)
   }, [transcript, onTranscriptChange])
 
+  // STT 상태 변경 시 콜백 호출
+  useEffect(() => {
+    if (onListeningChange) {
+      onListeningChange(isListening)
+    }
+  }, [isListening, onListeningChange])
+
   // 에러가 있으면 콘솔에 출력
   useEffect(() => {
     if (error) {
@@ -58,6 +67,7 @@ export function MicButton({
       }
     } else {
       console.log('Starting listening...')
+      // STT 시작 시 transcript만 초기화하고, 입력창은 그대로 유지
       resetTranscript()
       startListening()
     }

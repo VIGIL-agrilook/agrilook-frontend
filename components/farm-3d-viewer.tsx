@@ -31,10 +31,10 @@ function FarmModel({ modelPath }: { modelPath: string }) {
 // 로딩 중 표시할 컴포넌트
 function LoadingFallback() {
   return (
-    <div className="flex items-center justify-center w-full h-full bg-farm-light-green">
+    <div className="flex items-center justify-center w-full h-full bg-gradient-to-b from-blue-50 to-green-50">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-farm-brown mx-auto mb-4"></div>
-        <p className="text-farm-brown">3D 모델 로딩 중...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-400 mx-auto mb-4"></div>
+        <p className="text-green-600">3D 모델 로딩 중...</p>
       </div>
     </div>
   )
@@ -43,11 +43,11 @@ function LoadingFallback() {
 // 에러 표시 컴포넌트
 function ErrorFallback() {
   return (
-    <div className="flex items-center justify-center w-full h-full bg-farm-light-green">
+    <div className="flex items-center justify-center w-full h-full bg-gradient-to-b from-blue-50 to-green-50">
       <div className="text-center">
         <div className="text-6xl mb-4">🏞️</div>
-        <p className="text-farm-brown">3D 모델을 불러올 수 없습니다</p>
-        <p className="text-farm-brown text-sm mt-2">
+        <p className="text-green-600">3D 모델을 불러올 수 없습니다</p>
+        <p className="text-green-500 text-sm mt-2">
           농장 전경을 시각적으로 표현합니다
         </p>
       </div>
@@ -72,7 +72,7 @@ export default function Farm3DViewer({
             position: [5, 5, 5], 
             fov: 50 
           }}
-          style={{ background: 'linear-gradient(to bottom, #87CEEB, #98FB98)' }}
+          style={{ background: 'linear-gradient(to bottom, #E6F3FF, #F0FFF0)' }}
         >
           {/* 조명 설정 */}
           <ambientLight intensity={0.6} />

@@ -109,7 +109,7 @@ export const useSTT = (options: UseSTTOptions = {}): UseSTTReturn => {
     }
 
     try {
-      setTranscript('')
+      // STT 시작 시 transcript를 초기화하지 않음 (기존 입력값 유지)
       setError(null)
       recognition.start()
       console.log('useSTT: Recognition.start() called')

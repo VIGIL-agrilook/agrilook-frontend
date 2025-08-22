@@ -10,6 +10,7 @@ import Image from 'next/image'
 import { apiService } from '@/lib/api'
 import { MicButton } from '@/components/mic-button'
 import { MessageItem } from '@/components/message-item'
+import { LoadingMessage } from '@/components/loading-message'
 import { useTTS } from '@/lib/hooks/useTTS'
 
 interface Message {
@@ -30,6 +31,8 @@ export default function ChatbotPage() {
   ])
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isComposing, setIsComposing] = useState(false)
+  const [isSTTListening, setIsSTTListening] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   
   // TTS 훅 사용
@@ -210,31 +213,41 @@ export default function ChatbotPage() {
 
   // 음성 인식 transcript 변경 핸들러
   const handleTranscriptChange = (transcript: string) => {
-    setInputValue(transcript)
+    // STT가 활성화된 상태에서만 transcript를 입력창에 반영
+    if (isSTTListening && transcript && transcript.trim()) {
+      setInputValue(transcript)
+    }
   }
 
   // 음성 인식 최종 transcript 핸들러
   const handleTranscriptFinal = (transcript: string) => {
-    handleSendMessage(transcript)
+    if (transcript && transcript.trim()) {
+      handleSendMessage(transcript)
+    }
+  }
+
+  // STT 상태 변경 핸들러
+  const handleSTTListeningChange = (isListening: boolean) => {
+    setIsSTTListening(isListening)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
       e.preventDefault()
       
-      // 한글 입력 완료를 위해 잠시 대기
-      setTimeout(() => {
+      // 입력값이 있는 경우에만 전송
+      if (inputValue.trim()) {
         handleSendMessage()
-      }, 10)
+      }
     }
   }
 
   const handleCompositionStart = () => {
-    console.log('한글 입력 시작')
+    setIsComposing(true)
   }
 
   const handleCompositionEnd = () => {
-    console.log('한글 입력 완료')
+    setIsComposing(false)
   }
 
   const handleSendButtonClick = () => {
@@ -257,14 +270,19 @@ export default function ChatbotPage() {
             <div className="absolute inset-2 bg-gradient-to-br from-green-300 via-green-400 to-green-500 rounded-full shadow-lg"></div>
             
             {/* 팜멘토 이미지 */}
-            <div className="absolute inset-3 bg-white rounded-full flex items-center justify-center overflow-hidden shadow-inner hover:scale-105 transition-transform duration-300">
+            <div className={`absolute inset-3 bg-white rounded-full flex items-center justify-center overflow-hidden shadow-inner transition-transform duration-300 ${isLoading ? 'animate-pulse' : 'hover:scale-105'}`}>
               <Image 
                 src="/farmento.png" 
                 alt="팜멘토 캐릭터" 
                 width={64}
                 height={64}
-                className="object-cover w-full h-full p-1 md:p-2"
+                className={`object-cover w-full h-full p-1 md:p-2 ${isLoading ? 'opacity-70' : ''}`}
               />
+              {isLoading && (
+                <div className="absolute inset-0 bg-green-500/20 rounded-full flex items-center justify-center">
+                  <div className="w-6 h-6 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              )}
             </div>
             
             {/* 반짝이는 효과 */}
@@ -275,7 +293,9 @@ export default function ChatbotPage() {
           <ResponsiveH1 className="bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent mb-1 md:mb-2">
             팜멘토 챗봇
           </ResponsiveH1>
-          <ResponsiveP className="text-muted-foreground font-medium">농업 전문 AI 어시스턴트</ResponsiveP>
+          <ResponsiveP className="text-muted-foreground font-medium">
+            {isLoading ? '답변을 생성하고 있습니다...' : '농업 전문 AI 어시스턴트'}
+          </ResponsiveP>
         </div>
 
         {/* 중앙: 채팅 영역 - 남은 공간을 모두 차지하고 스크롤 가능 */}
@@ -293,6 +313,15 @@ export default function ChatbotPage() {
                   renderMessageContent={renderMessageContent}
                 />
               ))}
+              
+              {/* 로딩 중일 때 로딩 메시지 표시 */}
+              {isLoading && (
+                <LoadingMessage
+                  id={messages.length + 1}
+                  timestamp={new Date()}
+                />
+              )}
+              
               {/* 스크롤을 맨 아래로 이동시키기 위한 빈 div */}
               <div ref={messagesEndRef} />
             </div>
@@ -314,22 +343,33 @@ export default function ChatbotPage() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="농업 관련 질문을 입력하세요..."
-            className="flex-1"
+            onCompositionStart={handleCompositionStart}
+            onCompositionEnd={handleCompositionEnd}
+            placeholder={isLoading ? "답변을 생성하고 있습니다..." : isSTTListening ? "음성 인식 중... 직접 입력도 가능합니다" : "농업 관련 질문을 입력하세요..."}
+            className={`flex-1 ${isSTTListening ? 'border-blue-500 bg-blue-50/50' : ''} ${isLoading ? 'opacity-50' : ''}`}
+            disabled={isLoading}
           />
           {/* 음성 인식 버튼 */}
           <MicButton
             onTranscriptChange={handleTranscriptChange}
             onTranscriptFinal={handleTranscriptFinal}
+            onListeningChange={handleSTTListeningChange}
             disabled={isLoading}
             className="bg-primary text-primary-foreground"
           />
           <Button 
             onClick={handleSendButtonClick}
-            disabled={isLoading}
+            disabled={isLoading || isComposing || !inputValue.trim()}
             className="bg-primary text-primary-foreground px-4 md:px-6"
           >
-            {isLoading ? '전송 중...' : '전송'}
+            {isLoading ? (
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>생성 중...</span>
+              </div>
+            ) : (
+              '전송'
+            )}
           </Button>
         </div>
       </div>
