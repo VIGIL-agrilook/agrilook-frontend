@@ -129,11 +129,11 @@ export default function DashboardPage() {
           )}
           
           {/* 3행: 비료 관리와 퇴비 관리 - 동일 높이 */}
-          <div className={`${isPremium ? 'premium-section' : 'blur-section'} lg:h-[350px]`}>
+          <div className={`${isPremium ? 'premium-section' : 'blur-section'} lg:h-[420px]`}>
             <FertilizerSection selectedCrop={selectedCrop} />
           </div>
           
-          <div className={`${isPremium ? 'premium-section' : 'blur-section'} lg:h-[350px]`}>
+          <div className={`${isPremium ? 'premium-section' : 'blur-section'} lg:h-[420px]`}>
             <CompostSection selectedCrop={selectedCrop} />
           </div>
           

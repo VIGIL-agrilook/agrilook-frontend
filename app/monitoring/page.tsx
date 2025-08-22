@@ -11,7 +11,7 @@ import { StreamPlayer, StreamStatus } from '@/components/stream-player'
 export default function MonitoringPage() {
   const [mainCCTV, setMainCCTV] = useState(1)
   const [currentIntruderIndex, setCurrentIntruderIndex] = useState(0)
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
   const cctvData = [
     {
@@ -39,19 +39,19 @@ export default function MonitoringPage() {
       id: 1,
       name: '멧돼지',
       time: '오늘 06:23',
-      image: '/intruder1.png'
+      image: '/intruder1.jpg'
     },
     {
       id: 2,
-      name: '고라니',
+      name: '사슴',
       time: '어제 23:50',
-      image: '/intruder2.png'
+      image: '/intruder2.jpg'
     },
     {
       id: 3,
-      name: '조류 떼',
+      name: '사람',
       time: '어제 18:15',
-      image: '/intruder3.png'
+      image: '/intruder3.jpg'
     }
   ]
 
@@ -64,32 +64,34 @@ export default function MonitoringPage() {
   }
 
   const handlePrevIntruder = () => {
-    setSlideDirection('right')
+    if (isTransitioning) return
+    setIsTransitioning(true)
     setTimeout(() => {
       setCurrentIntruderIndex(prev => 
         prev === 0 ? intruderData.length - 1 : prev - 1
       )
-      setSlideDirection(null)
-    }, 150)
+      setIsTransitioning(false)
+    }, 300)
   }
 
   const handleNextIntruder = () => {
-    setSlideDirection('left')
+    if (isTransitioning) return
+    setIsTransitioning(true)
     setTimeout(() => {
       setCurrentIntruderIndex(prev => 
         prev === intruderData.length - 1 ? 0 : prev + 1
       )
-      setSlideDirection(null)
-    }, 150)
+      setIsTransitioning(false)
+    }, 300)
   }
 
   const handleDirectIntruder = (index: number) => {
-    const direction = index > currentIntruderIndex ? 'left' : 'right'
-    setSlideDirection(direction)
+    if (isTransitioning || index === currentIntruderIndex) return
+    setIsTransitioning(true)
     setTimeout(() => {
       setCurrentIntruderIndex(index)
-      setSlideDirection(null)
-    }, 150)
+      setIsTransitioning(false)
+    }, 300)
   }
 
   return (
@@ -183,26 +185,24 @@ export default function MonitoringPage() {
                   최근 24시간 내 침입자 {intruderData.length}건 감지
                 </div>
                 
-                {/* 침입자 슬라이더 */}
-                <div className="relative">
-                  {/* 침입자 이미지 - 슬라이드 효과 */}
-                  <div className="h-40 md:h-96 rounded-lg overflow-hidden bg-gray-100">
-                    <div 
-                      className={`w-full h-full transition-transform duration-300 ease-in-out ${
-                        slideDirection === 'left' ? 'transform -translate-x-full' :
-                        slideDirection === 'right' ? 'transform translate-x-full' :
-                        'transform translate-x-0'
-                      }`}
-                    >
-                      <Image
-                        src={currentIntruder.image}
-                        alt={`${currentIntruder.name} 침입자`}
-                        width={400}
-                        height={400}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </div>
+                                 {/* 침입자 슬라이더 */}
+                 <div className="relative">
+                   {/* 침입자 이미지 - 페이드 효과 */}
+                   <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-100">
+                     <div 
+                       className={`w-full h-full transition-all duration-500 ease-in-out ${
+                         isTransitioning ? 'opacity-50 scale-95' : 'opacity-100 scale-100'
+                       }`}
+                     >
+                       <Image
+                         src={currentIntruder.image}
+                         alt={`${currentIntruder.name} 침입자`}
+                         width={640}
+                         height={480}
+                         className="w-full h-full object-contain"
+                       />
+                     </div>
+                   </div>
                   
                   {/* 화살표 버튼 */}
                   <Button

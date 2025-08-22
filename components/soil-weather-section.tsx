@@ -145,25 +145,25 @@ export default function SoilWeatherSection({ isPremium, weatherData }: SoilWeath
           {/* 1행 1열: 날씨 */}
           <div className="bg-gradient-to-br from-blue-100 via-blue-200 to-cyan-300 rounded-xl border border-blue-300 p-3 md:p-4 flex flex-col justify-center items-center shadow-lg md:h-40">
             <div className="text-3xl md:text-5xl mb-1 md:mb-2">
-              {weatherData?.weather === 'rain' ? '🌧️' : 
-               weatherData?.weather === 'cloudy' ? '☁️' : 
-               weatherData?.weather === 'snow' ? '❄️' : 
-               weatherData?.weather === '맑음' ? '☀️' : '☀️'}
+              {weatherData?.weather === '맑음' ? '☀️' : 
+               weatherData?.weather === '흐림' ? '☁️' : 
+               weatherData?.weather === '비' ? '🌧️' : 
+               weatherData?.weather === '눈' ? '❄️' : '🌤️'}
             </div>
             <div className="text-lg md:text-2xl font-bold text-blue-900 mb-2 md:mb-3">
               {weatherData && typeof weatherData.temperature === 'number' ? `${weatherData.temperature}°C` : '--°C'}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 md:gap-2 w-full">
-              <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center flex items-center justify-center">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 md:gap-2 w-full">
+              <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center flex flex-col items-center justify-center">
                 <span className="text-[8px] sm:text-[10px] md:text-fluid-xs text-blue-700 font-medium">습도</span>
-                <span className="text-[10px] sm:text-xs md:text-fluid-sm font-bold text-blue-900 ml-1">
+                <span className="text-[10px] sm:text-xs md:text-fluid-sm font-bold text-blue-900">
                   {weatherData && typeof weatherData.humidity === 'number' ? `${weatherData.humidity}%` : '--%'}
                 </span>
               </div>
-              <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center flex items-center justify-center">
+              <div className="bg-white/60 rounded-lg p-1.5 md:p-2 text-center flex flex-col items-center justify-center">
                 <span className="text-[8px] sm:text-[10px] md:text-fluid-xs text-blue-700 font-medium">강수량</span>
-                <span className="text-[10px] sm:text-xs md:text-fluid-sm font-bold text-blue-900 ml-1">
-                  {weatherData && typeof weatherData.precipitation === 'number' ? `${weatherData.precipitation}mm` : '--mm'}
+                <span className="text-[10px] sm:text-xs md:text-fluid-sm font-bold text-blue-900">
+                  {weatherData && typeof weatherData.precipitation === 'number' ? `${weatherData.precipitation < 0 ? 0 : weatherData.precipitation}mm` : '--mm'}
                 </span>
               </div>
             </div>
