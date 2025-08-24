@@ -7,6 +7,7 @@ import SoilWeatherSection from '@/components/soil-weather-section'
 import FertilizerSection from '@/components/fertilizer-section'
 import CompostSection from '@/components/compost-section'
 import SoilChartSection from '@/components/soil-chart-section'
+import IntruderSection from '@/components/intruder-section'
 import FloatingChatButton from '@/components/floating-chat-button'
 import { Button } from '@/components/ui/button'
 import { fetchFertilizerRecommendation } from '@/lib/api'
@@ -159,9 +160,14 @@ export default function DashboardPage() {
             />
           </div>
           
-          {/* 4행: 시계열 그래프 (전체 너비) */}
+          {/* 4행: 시계열 그래프와 침입자 감지 (전체 너비) */}
           <div className={`lg:col-span-2 lg:h-[500px] ${isPremium || showSensorData || selectedCrop ? 'premium-section' : 'blur-section'}`}>
             <SoilChartSection />
+          </div>
+          
+          {/* 5행: 침입자 감지 현황 (전체 너비) */}
+          <div className="lg:col-span-2 lg:h-[400px]">
+            <IntruderSection farmId="farm_0001" refreshInterval={60000} />
           </div>
         </div>
       </main>

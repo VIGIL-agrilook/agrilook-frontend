@@ -124,3 +124,33 @@ export interface SpeechSynthesisVoice {
 export interface SpeechSynthesisErrorEvent extends Event {
   error: string
 }
+
+// 침입자 감지 API 타입 정의
+export interface IntruderDetection {
+  id: string;
+  class: 'human' | 'squirrel' | 'wild_boar' | 'deer' | 'bird';
+  confidence: string;
+  datetime: string;
+  datetime_iso: string;
+  farm_id: string;
+  image_url: string;
+}
+
+export interface IntruderResponse {
+  farm_id: string;
+  hours_filter: number;
+  total_count: number;
+  class_counts: {
+    human: number;
+    squirrel: number;
+    wild_boar: number;
+    deer?: number;
+    bird?: number;
+  };
+  data: IntruderDetection[];
+}
+
+export interface IntruderApiParams {
+  hours?: number;
+  farmid?: string;
+}

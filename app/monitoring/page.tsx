@@ -7,11 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import FloatingChatButton from '@/components/floating-chat-button'
 import { StreamPlayer, StreamStatus } from '@/components/stream-player'
+import IntruderSection from '@/components/intruder-section'
 
 export default function MonitoringPage() {
   const [mainCCTV, setMainCCTV] = useState(1)
-  const [currentIntruderIndex, setCurrentIntruderIndex] = useState(0)
-  const [isTransitioning, setIsTransitioning] = useState(false)
 
   const cctvData = [
     {
@@ -34,64 +33,11 @@ export default function MonitoringPage() {
     }
   ]
 
-  const intruderData = [
-    {
-      id: 1,
-      name: '멧돼지',
-      time: '오늘 06:23',
-      image: '/intruder1.jpg'
-    },
-    {
-      id: 2,
-      name: '사슴',
-      time: '어제 23:50',
-      image: '/intruder2.jpg'
-    },
-    {
-      id: 3,
-      name: '사람',
-      time: '어제 18:15',
-      image: '/intruder3.jpg'
-    }
-  ]
-
   const currentMainCCTV = cctvData.find(cctv => cctv.id === mainCCTV)
   const subCCTVs = cctvData.filter(cctv => cctv.id !== mainCCTV)
-  const currentIntruder = intruderData[currentIntruderIndex]
 
   const handleSetMain = (cctvId: number) => {
     setMainCCTV(cctvId)
-  }
-
-  const handlePrevIntruder = () => {
-    if (isTransitioning) return
-    setIsTransitioning(true)
-    setTimeout(() => {
-      setCurrentIntruderIndex(prev => 
-        prev === 0 ? intruderData.length - 1 : prev - 1
-      )
-      setIsTransitioning(false)
-    }, 300)
-  }
-
-  const handleNextIntruder = () => {
-    if (isTransitioning) return
-    setIsTransitioning(true)
-    setTimeout(() => {
-      setCurrentIntruderIndex(prev => 
-        prev === intruderData.length - 1 ? 0 : prev + 1
-      )
-      setIsTransitioning(false)
-    }, 300)
-  }
-
-  const handleDirectIntruder = (index: number) => {
-    if (isTransitioning || index === currentIntruderIndex) return
-    setIsTransitioning(true)
-    setTimeout(() => {
-      setCurrentIntruderIndex(index)
-      setIsTransitioning(false)
-    }, 300)
   }
 
   return (
@@ -100,8 +46,6 @@ export default function MonitoringPage() {
       
       <main className="container mx-auto px-4 py-4 md:py-8 pt-20">
         <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4 md:mb-8">실시간 관리</h1>
-        
-
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
           
@@ -164,7 +108,6 @@ export default function MonitoringPage() {
                           {cctv.name}
                         </div>
                       </div>
-                      
                     </div>
                   ))}
                 </div>
@@ -174,81 +117,9 @@ export default function MonitoringPage() {
             </Card>
           </div>
           
-          {/* 오른쪽: 침입자 현황 */}
+          {/* 오른쪽: 침입자 감지 현황 */}
           <div>
-            <Card className="bg-card h-full">
-              <CardHeader className="py-3 md:py-6">
-                <CardTitle className="text-foreground text-base md:text-lg">침입자 현황</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 md:space-y-4 pt-3 md:pt-6">
-                <div className="text-red-600 font-semibold">
-                  최근 24시간 내 침입자 {intruderData.length}건 감지
-                </div>
-                
-                                 {/* 침입자 슬라이더 */}
-                 <div className="relative">
-                   {/* 침입자 이미지 - 페이드 효과 */}
-                   <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-100">
-                     <div 
-                       className={`w-full h-full transition-all duration-500 ease-in-out ${
-                         isTransitioning ? 'opacity-50 scale-95' : 'opacity-100 scale-100'
-                       }`}
-                     >
-                       <Image
-                         src={currentIntruder.image}
-                         alt={`${currentIntruder.name} 침입자`}
-                         width={640}
-                         height={480}
-                         className="w-full h-full object-contain"
-                       />
-                     </div>
-                   </div>
-                  
-                  {/* 화살표 버튼 */}
-                  <Button
-                    onClick={handlePrevIntruder}
-                    className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 p-0 transition-all duration-200 hover:scale-110"
-                    size="sm"
-                  >
-                    ←
-                  </Button>
-                  <Button
-                    onClick={handleNextIntruder}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 p-0 transition-all duration-200 hover:scale-110"
-                    size="sm"
-                  >
-                    →
-                  </Button>
-                  
-                  {/* 침입자 정보 */}
-                  <div className="mt-4 text-center">
-                    <div className="text-lg font-semibold text-foreground">
-                      {currentIntruder.name}
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      {currentIntruder.time}
-                    </div>
-                  </div>
-                  
-                  {/* 인디케이터 점 */}
-                  <div className="flex justify-center space-x-2 mt-4">
-                    {intruderData.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleDirectIntruder(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-200 hover:scale-125 ${
-                          index === currentIntruderIndex
-                            ? 'bg-primary scale-125'
-                            : 'bg-gray-300 hover:bg-gray-400'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <div className="text-xs text-gray-400">* Mock 데이터 - 실제 AI 분석 연동 예정</div>
-              </CardContent>
-            </Card>
+            <IntruderSection farmId="farm_0001" refreshInterval={30000} />
           </div>
         </div>
       </main>

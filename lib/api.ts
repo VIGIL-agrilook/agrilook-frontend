@@ -215,6 +215,18 @@ export const apiService = {
   // 농업 맞춤 기상 요약 (백엔드에서 제공하는 경우)
   async getAgriculturalWeatherSummary(station: string) {
     return apiClient.get(`/weather/agricultural-summary?station=${station}`);
+  },
+
+  // 침입자 감지 데이터 조회
+  async getIntruderData(params?: { hours?: number; farmid?: string }) {
+    const searchParams = new URLSearchParams();
+    if (params?.hours) searchParams.append('hours', params.hours.toString());
+    if (params?.farmid) searchParams.append('farmid', params.farmid);
+    
+    const queryString = searchParams.toString();
+    const endpoint = `/intruder/recent${queryString ? `?${queryString}` : ''}`;
+    
+    return apiClient.get(endpoint);
   }
 };
 
@@ -247,8 +259,285 @@ export async function fetchFertilizerRecommendation(cropName: string, farmId: st
   }
 }
 
-// 더미 비료 추천 데이터
+// 더미 비료 추천 데이터 (작물별 차별화)
 function getDummyFertilizerData(cropName: string) {
+  // 작물별 맞춤 데이터
+  const cropSpecificData = {
+    '대파': {
+      base: [
+        {
+          K_ratio: 0.25,
+          N_ratio: 0.5,
+          P_ratio: 0.25,
+          bags: 3.0,
+          fertilizer_id: 'BASE001',
+          fertilizer_name: '대파 밑거름 복합비료',
+          need_K_kg: 25.0,
+          need_N_kg: 50.0,
+          need_P_kg: 25.0,
+          shortage_K_kg: 8.0,
+          shortage_P_kg: 4.0,
+          usage_kg: 75.0
+        },
+        {
+          K_ratio: 0.2,
+          N_ratio: 0.6,
+          P_ratio: 0.2,
+          bags: 2.5,
+          fertilizer_id: 'BASE002',
+          fertilizer_name: '대파 밑거름 질소비료',
+          need_K_kg: 20.0,
+          need_N_kg: 60.0,
+          need_P_kg: 20.0,
+          shortage_K_kg: 5.0,
+          shortage_P_kg: 3.0,
+          usage_kg: 62.5
+        },
+        {
+          K_ratio: 0.4,
+          N_ratio: 0.3,
+          P_ratio: 0.3,
+          bags: 2.0,
+          fertilizer_id: 'BASE003',
+          fertilizer_name: '대파 밑거름 칼리비료',
+          need_K_kg: 40.0,
+          need_N_kg: 30.0,
+          need_P_kg: 30.0,
+          shortage_K_kg: 15.0,
+          shortage_P_kg: 8.0,
+          usage_kg: 50.0
+        }
+      ],
+      additional: [
+        {
+          K_ratio: 0.25,
+          N_ratio: 0.5,
+          P_ratio: 0.25,
+          bags: 2.0,
+          fertilizer_id: 'FERT001',
+          fertilizer_name: '대파 웃거름 복합비료',
+          need_K_kg: 15.0,
+          need_N_kg: 30.0,
+          need_P_kg: 15.0,
+          shortage_K_kg: 5.0,
+          shortage_P_kg: 3.0,
+          usage_kg: 50.0
+        },
+        {
+          K_ratio: 0.2,
+          N_ratio: 0.6,
+          P_ratio: 0.2,
+          bags: 1.5,
+          fertilizer_id: 'FERT002',
+          fertilizer_name: '대파 웃거름 질소비료',
+          need_K_kg: 10.0,
+          need_N_kg: 30.0,
+          need_P_kg: 10.0,
+          shortage_K_kg: 2.0,
+          shortage_P_kg: 1.0,
+          usage_kg: 37.5
+        },
+        {
+          K_ratio: 0.4,
+          N_ratio: 0.3,
+          P_ratio: 0.3,
+          bags: 1.0,
+          fertilizer_id: 'FERT003',
+          fertilizer_name: '대파 웃거름 칼리비료',
+          need_K_kg: 20.0,
+          need_N_kg: 15.0,
+          need_P_kg: 15.0,
+          shortage_K_kg: 8.0,
+          shortage_P_kg: 2.0,
+          usage_kg: 25.0
+        }
+      ]
+    },
+    '부추': {
+      base: [
+        {
+          K_ratio: 0.3,
+          N_ratio: 0.45,
+          P_ratio: 0.25,
+          bags: 3.5,
+          fertilizer_id: 'BASE001',
+          fertilizer_name: '부추 밑거름 복합비료',
+          need_K_kg: 35.0,
+          need_N_kg: 52.5,
+          need_P_kg: 29.2,
+          shortage_K_kg: 12.0,
+          shortage_P_kg: 6.0,
+          usage_kg: 87.5
+        },
+        {
+          K_ratio: 0.2,
+          N_ratio: 0.6,
+          P_ratio: 0.2,
+          bags: 3.0,
+          fertilizer_id: 'BASE002',
+          fertilizer_name: '부추 밑거름 질소비료',
+          need_K_kg: 24.0,
+          need_N_kg: 72.0,
+          need_P_kg: 24.0,
+          shortage_K_kg: 8.0,
+          shortage_P_kg: 4.0,
+          usage_kg: 75.0
+        },
+        {
+          K_ratio: 0.45,
+          N_ratio: 0.25,
+          P_ratio: 0.3,
+          bags: 2.5,
+          fertilizer_id: 'BASE003',
+          fertilizer_name: '부추 밑거름 칼리비료',
+          need_K_kg: 56.3,
+          need_N_kg: 31.3,
+          need_P_kg: 37.5,
+          shortage_K_kg: 20.0,
+          shortage_P_kg: 10.0,
+          usage_kg: 62.5
+        }
+      ],
+      additional: [
+        {
+          K_ratio: 0.3,
+          N_ratio: 0.45,
+          P_ratio: 0.25,
+          bags: 2.5,
+          fertilizer_id: 'FERT001',
+          fertilizer_name: '부추 웃거름 복합비료',
+          need_K_kg: 25.0,
+          need_N_kg: 37.5,
+          need_P_kg: 20.8,
+          shortage_K_kg: 8.0,
+          shortage_P_kg: 4.0,
+          usage_kg: 62.5
+        },
+        {
+          K_ratio: 0.2,
+          N_ratio: 0.6,
+          P_ratio: 0.2,
+          bags: 2.0,
+          fertilizer_id: 'FERT002',
+          fertilizer_name: '부추 웃거름 질소비료',
+          need_K_kg: 16.0,
+          need_N_kg: 48.0,
+          need_P_kg: 16.0,
+          shortage_K_kg: 5.0,
+          shortage_P_kg: 3.0,
+          usage_kg: 50.0
+        },
+        {
+          K_ratio: 0.45,
+          N_ratio: 0.25,
+          P_ratio: 0.3,
+          bags: 1.5,
+          fertilizer_id: 'FERT003',
+          fertilizer_name: '부추 웃거름 칼리비료',
+          need_K_kg: 33.8,
+          need_N_kg: 18.8,
+          need_P_kg: 22.5,
+          shortage_K_kg: 12.0,
+          shortage_P_kg: 6.0,
+          usage_kg: 37.5
+        }
+      ]
+    },
+    '고추': {
+      base: [
+        {
+          K_ratio: 0.3,
+          N_ratio: 0.4,
+          P_ratio: 0.3,
+          bags: 2.5,
+          fertilizer_id: 'BASE001',
+          fertilizer_name: '고추 밑거름 복합비료',
+          need_K_kg: 25.0,
+          need_N_kg: 33.3,
+          need_P_kg: 25.0,
+          shortage_K_kg: 8.0,
+          shortage_P_kg: 4.0,
+          usage_kg: 62.5
+        },
+        {
+          K_ratio: 0.2,
+          N_ratio: 0.6,
+          P_ratio: 0.2,
+          bags: 2.0,
+          fertilizer_id: 'BASE002',
+          fertilizer_name: '고추 밑거름 질소비료',
+          need_K_kg: 16.0,
+          need_N_kg: 48.0,
+          need_P_kg: 16.0,
+          shortage_K_kg: 5.0,
+          shortage_P_kg: 3.0,
+          usage_kg: 50.0
+        },
+        {
+          K_ratio: 0.4,
+          N_ratio: 0.3,
+          P_ratio: 0.3,
+          bags: 1.8,
+          fertilizer_id: 'BASE003',
+          fertilizer_name: '고추 밑거름 칼리비료',
+          need_K_kg: 36.0,
+          need_N_kg: 27.0,
+          need_P_kg: 27.0,
+          shortage_K_kg: 12.0,
+          shortage_P_kg: 6.0,
+          usage_kg: 45.0
+        }
+      ],
+      additional: [
+        {
+          K_ratio: 0.3,
+          N_ratio: 0.4,
+          P_ratio: 0.3,
+          bags: 1.8,
+          fertilizer_id: 'FERT001',
+          fertilizer_name: '고추 웃거름 복합비료',
+          need_K_kg: 18.0,
+          need_N_kg: 24.0,
+          need_P_kg: 18.0,
+          shortage_K_kg: 6.0,
+          shortage_P_kg: 3.0,
+          usage_kg: 45.0
+        },
+        {
+          K_ratio: 0.2,
+          N_ratio: 0.6,
+          P_ratio: 0.2,
+          bags: 1.5,
+          fertilizer_id: 'FERT002',
+          fertilizer_name: '고추 웃거름 질소비료',
+          need_K_kg: 12.0,
+          need_N_kg: 36.0,
+          need_P_kg: 12.0,
+          shortage_K_kg: 4.0,
+          shortage_P_kg: 2.0,
+          usage_kg: 37.5
+        },
+        {
+          K_ratio: 0.4,
+          N_ratio: 0.3,
+          P_ratio: 0.3,
+          bags: 1.2,
+          fertilizer_id: 'FERT003',
+          fertilizer_name: '고추 웃거름 칼리비료',
+          need_K_kg: 24.0,
+          need_N_kg: 18.0,
+          need_P_kg: 18.0,
+          shortage_K_kg: 8.0,
+          shortage_P_kg: 4.0,
+          usage_kg: 30.0
+        }
+      ]
+    }
+  }
+
+  // 기본값 (알 수 없는 작물)
+  const defaultData = cropSpecificData['대파']
+
   return {
     _id: 'dummy_001',
     crop: {
@@ -261,95 +550,6 @@ function getDummyFertilizerData(cropName: string) {
       mixed_kg: 400.0,
       pig_kg: 350.0
     },
-    fertilizer: {
-      additional: [
-        {
-          K_ratio: 0.3,
-          N_ratio: 0.4,
-          P_ratio: 0.3,
-          bags: 2.0,
-          fertilizer_id: 'FERT001',
-          fertilizer_name: '웃거름 복합비료',
-          need_K_kg: 15.0,
-          need_N_kg: 20.0,
-          need_P_kg: 15.0,
-          shortage_K_kg: 5.0,
-          shortage_P_kg: 3.0,
-          usage_kg: 50.0
-        },
-        {
-          K_ratio: 0.2,
-          N_ratio: 0.5,
-          P_ratio: 0.3,
-          bags: 1.5,
-          fertilizer_id: 'FERT002',
-          fertilizer_name: '웃거름 질소비료',
-          need_K_kg: 10.0,
-          need_N_kg: 25.0,
-          need_P_kg: 15.0,
-          shortage_K_kg: 2.0,
-          shortage_P_kg: 1.0,
-          usage_kg: 37.5
-        },
-        {
-          K_ratio: 0.4,
-          N_ratio: 0.3,
-          P_ratio: 0.3,
-          bags: 1.0,
-          fertilizer_id: 'FERT003',
-          fertilizer_name: '웃거름 칼리비료',
-          need_K_kg: 20.0,
-          need_N_kg: 15.0,
-          need_P_kg: 15.0,
-          shortage_K_kg: 8.0,
-          shortage_P_kg: 2.0,
-          usage_kg: 25.0
-        }
-      ],
-      base: [
-        {
-          K_ratio: 0.3,
-          N_ratio: 0.4,
-          P_ratio: 0.3,
-          bags: 3.0,
-          fertilizer_id: 'BASE001',
-          fertilizer_name: '밑거름 복합비료',
-          need_K_kg: 30.0,
-          need_N_kg: 40.0,
-          need_P_kg: 30.0,
-          shortage_K_kg: 10.0,
-          shortage_P_kg: 5.0,
-          usage_kg: 75.0
-        },
-        {
-          K_ratio: 0.2,
-          N_ratio: 0.5,
-          P_ratio: 0.3,
-          bags: 2.5,
-          fertilizer_id: 'BASE002',
-          fertilizer_name: '밑거름 질소비료',
-          need_K_kg: 20.0,
-          need_N_kg: 50.0,
-          need_P_kg: 30.0,
-          shortage_K_kg: 5.0,
-          shortage_P_kg: 3.0,
-          usage_kg: 62.5
-        },
-        {
-          K_ratio: 0.4,
-          N_ratio: 0.3,
-          P_ratio: 0.3,
-          bags: 2.0,
-          fertilizer_id: 'BASE003',
-          fertilizer_name: '밑거름 칼리비료',
-          need_K_kg: 40.0,
-          need_N_kg: 30.0,
-          need_P_kg: 30.0,
-          shortage_K_kg: 15.0,
-          shortage_P_kg: 8.0,
-          usage_kg: 50.0
-        }
-      ]
-    }
+    fertilizer: cropSpecificData[cropName as keyof typeof cropSpecificData] || defaultData
   }
 }

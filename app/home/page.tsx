@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
+import { IntruderResponse } from '@/lib/types'
 
 interface WeatherData {
   temperature: number
@@ -20,6 +21,8 @@ export default function HomePage() {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
   const [weatherLoading, setWeatherLoading] = useState(true)
   const [weatherError, setWeatherError] = useState<string | null>(null)
+  const [intruderData, setIntruderData] = useState<IntruderResponse | null>(null)
+  const [intruderLoading, setIntruderLoading] = useState(true)
 
   // 날씨 데이터 가져오기
   useEffect(() => {
@@ -64,6 +67,97 @@ export default function HomePage() {
 
     fetchWeatherData()
   }, [])
+
+  // 침입자 데이터 가져오기
+  useEffect(() => {
+    const fetchIntruderData = async () => {
+      try {
+        setIntruderLoading(true)
+        
+        console.log('홈 화면: 침입자 데이터 가져오기 시작...')
+        const response = await fetch('/api/intruder/recent?hours=24&farmid=farm_0001')
+        console.log('홈 화면: 침입자 API 응답:', response)
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        
+        const data = await response.json()
+        console.log('홈 화면: 침입자 API 데이터:', data)
+        
+        setIntruderData(data)
+      } catch (error) {
+        console.error('홈 화면: 침입자 데이터 가져오기 오류:', error)
+        // 에러 시 기본 데이터 설정
+        setIntruderData({
+          farm_id: 'farm_0001',
+          hours_filter: 24,
+          total_count: 0,
+          class_counts: {},
+          data: []
+        })
+      } finally {
+        setIntruderLoading(false)
+      }
+    }
+
+    fetchIntruderData()
+  }, [])
+
+  // 침입자 클래스별 한글 이름
+  const getClassName = (className: string) => {
+    switch (className) {
+      case 'human':
+        return '사람'
+      case 'wild_boar':
+        return '멧돼지'
+      case 'squirrel':
+        return '다람쥐'
+      case 'deer':
+        return '사슴'
+      case 'bird':
+        return '새'
+      default:
+        return className
+    }
+  }
+
+  // 침입자 클래스별 이모지
+  const getClassEmoji = (className: string) => {
+    switch (className) {
+      case 'human':
+        return '👤'
+      case 'wild_boar':
+        return '🐗'
+      case 'squirrel':
+        return '🐿️'
+      case 'deer':
+        return '🦌'
+      case 'bird':
+        return '🐦'
+      default:
+        return '🐾'
+    }
+  }
+
+  // 날짜 포맷팅 (상대적 시간)
+  const formatRelativeTime = (dateTimeIso: string) => {
+    const date = new Date(dateTimeIso)
+    const now = new Date()
+    const diffMs = now.getTime() - date.getTime()
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+    const diffMinutes = Math.floor(diffMs / (1000 * 60))
+
+    if (diffMinutes < 60) {
+      return `${diffMinutes}분 전`
+    } else if (diffHours < 24) {
+      return `${diffHours}시간 전`
+    } else {
+      const diffDays = Math.floor(diffHours / 24)
+      return `${diffDays}일 전`
+    }
+  }
+
   const summaryCards = [
     {
       title: '🌱 내 작물',
@@ -109,23 +203,35 @@ export default function HomePage() {
       onClick: () => router.push('/monitoring'),
       details: (
         <div className="space-y-0.5 md:space-y-1 text-sm md:text-lg leading-tight">
-          <div className="text-red-600 font-medium text-center mb-1 md:mb-2">
-            24시간 내 침입자 3건 감지
-          </div>
-          <div className="space-y-0.5 md:space-y-1">
-            <div className="flex justify-between text-xs md:text-sm">
-              <span>🐗 멧돼지</span>
-              <span>오늘 06:23</span>
+          {intruderLoading ? (
+            <div className="text-center text-gray-500">
+              <div className="text-xs md:text-sm">로딩 중...</div>
             </div>
-            <div className="flex justify-between text-xs md:text-sm">
-              <span>🦌 고라니</span>
-              <span>어제 23:50</span>
+          ) : intruderData ? (
+            <>
+              <div className="text-red-600 font-medium text-center mb-1 md:mb-2">
+                24시간 내 침입자 {intruderData.total_count}건 감지
+              </div>
+              {intruderData.class_counts && Object.keys(intruderData.class_counts).length > 0 ? (
+                <div className="space-y-0.5 md:space-y-1">
+                  {Object.entries(intruderData.class_counts).map(([className, count]) => (
+                    <div key={className} className="flex justify-between text-xs md:text-sm">
+                      <span>{getClassEmoji(className)} {getClassName(className)}</span>
+                      <span className="font-medium">{count}건</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center text-green-600 text-xs md:text-sm">
+                  ✓ 침입자 없음
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center text-gray-500 text-xs md:text-sm">
+              데이터 없음
             </div>
-            <div className="flex justify-between text-xs md:text-sm">
-              <span>🐦 조류 떼</span>
-              <span>어제 18:15</span>
-            </div>
-          </div>
+          )}
         </div>
       )
     }
