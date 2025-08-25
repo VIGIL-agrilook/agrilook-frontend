@@ -111,12 +111,24 @@ export default function HomePage() {
         return '사람'
       case 'wild_boar':
         return '멧돼지'
-      case 'squirrel':
+      case 'siberian_chipmunk':
         return '다람쥐'
-      case 'deer':
-        return '사슴'
+      case 'water_deer':
+        return '고라니'
       case 'bird':
         return '새'
+      case 'wild_rabbit':
+        return '토끼'
+      case 'leopard_cat':
+        return '삵'
+      case 'raccoon':
+        return '너구리'
+      case 'squirrel':
+        return '청설모'
+      case 'dog':
+        return '개'
+      case 'weasel':
+        return '족제비'
       default:
         return className
     }
@@ -129,12 +141,24 @@ export default function HomePage() {
         return '👤'
       case 'wild_boar':
         return '🐗'
-      case 'squirrel':
+      case 'siberian_chipmunk':
         return '🐿️'
-      case 'deer':
+      case 'water_deer':
         return '🦌'
       case 'bird':
         return '🐦'
+      case 'wild_rabbit':
+        return '🐰'
+      case 'leopard_cat':
+        return '🐱'
+      case 'raccoon':
+        return '🦝'
+      case 'squirrel':
+        return '🐿️'
+      case 'dog':
+        return '🐕'
+      case 'weasel':
+        return '🦡'
       default:
         return '🐾'
     }
