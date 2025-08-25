@@ -189,16 +189,16 @@ export default function HomePage() {
       details: (
         <div className="space-y-0.5 md:space-y-1 text-sm md:text-lg leading-tight">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1">🥒 오이</span>
+            <span className="flex items-center gap-1">대파</span>
             <span className="text-green-600">생육 양호</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1">🍅 토마토</span>
-            <span className="text-blue-600">개화기</span>
+            <span className="flex items-center gap-1">부추</span>
+            <span className="text-blue-600">수확기</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1">🥬 배추</span>
-            <span className="text-orange-600">결구기</span>
+            <span className="flex items-center gap-1">고추</span>
+            <span className="text-orange-600">개화기</span>
           </div>
         </div>
       )
