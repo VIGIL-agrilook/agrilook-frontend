@@ -37,7 +37,7 @@ export default function Navigation() {
               {/* 웹 화면에서만 표시되는 서브타이틀 */}
               <span className="hidden md:inline text-sm md:text-base text-green-100 font-normal">
                 
-                ㅇ에올인원 AI 농지 관리 플랫폼
+                올인원 AI 농지 관리 플랫폼
               </span>
             </div>
           </Link>
