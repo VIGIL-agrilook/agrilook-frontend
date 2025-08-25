@@ -43,11 +43,42 @@ export default function ChatbotPage() {
     volume: 1
   })
 
-  // 메시지 내용을 단순 텍스트로 렌더링 (마크다운 비활성화)
+  // 마크다운 문법 제거 함수
+  const removeMarkdown = (text: string) => {
+    return text
+      // 헤딩 제거 (# ## ### 등)
+      .replace(/^#{1,6}\s+/gm, '')
+      // 볼드 제거 (**텍스트** 또는 __텍스트__)
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/__(.*?)__/g, '$1')
+      // 이탤릭 제거 (*텍스트* 또는 _텍스트_)
+      .replace(/\*(.*?)\*/g, '$1')
+      .replace(/_(.*?)_/g, '$1')
+      // 코드 블록 제거 (```코드```)
+      .replace(/```[\s\S]*?```/g, '')
+      // 인라인 코드 제거 (`코드`)
+      .replace(/`([^`]+)`/g, '$1')
+      // 링크 제거 ([텍스트](URL))
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      // 리스트 마커 제거 (- * +)
+      .replace(/^[-*+]\s+/gm, '')
+      // 번호 리스트 제거 (1. 2. 등)
+      .replace(/^\d+\.\s+/gm, '')
+      // 인용 제거 (> 텍스트)
+      .replace(/^>\s+/gm, '')
+      // 수평선 제거 (--- 또는 ***)
+      .replace(/^[-*]{3,}$/gm, '')
+      // 줄바꿈 정리
+      .replace(/\n\s*\n/g, '\n')
+      .trim()
+  }
+
+  // 메시지 내용을 단순 텍스트로 렌더링 (마크다운 제거)
   const renderMessageContent = (text: string) => {
+    const cleanText = removeMarkdown(text)
     return (
       <div className="whitespace-pre-wrap text-xs md:text-sm leading-snug">
-        {text}
+        {cleanText}
       </div>
     )
   }
