@@ -36,7 +36,8 @@ export default function Navigation() {
               <span className="text-xl md:text-2xl font-bold text-white">들여다밭</span>
               {/* 웹 화면에서만 표시되는 서브타이틀 */}
               <span className="hidden md:inline text-sm md:text-base text-green-100 font-normal">
-                올인원 AI 농지 관리 플랫폼
+                
+                ㅇ에올인원 AI 농지 관리 플랫폼
               </span>
             </div>
           </Link>
