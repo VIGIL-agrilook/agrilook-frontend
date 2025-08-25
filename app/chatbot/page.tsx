@@ -43,102 +43,13 @@ export default function ChatbotPage() {
     volume: 1
   })
 
-  // 메시지 내 간단한 마크다운(제목/테이블) 렌더러
+  // 메시지 내용을 단순 텍스트로 렌더링 (마크다운 비활성화)
   const renderMessageContent = (text: string) => {
-    const lines = text.split('\n')
-    const elements: JSX.Element[] = []
-
-    let i = 0
-    while (i < lines.length) {
-      const line = lines[i]
-      const trimmed = line.trim()
-
-      // 빈 줄은 단락 구분으로 처리
-      if (trimmed.length === 0) {
-        i += 1
-        continue
-      }
-
-      // 제목 (### ) 처리
-      if (trimmed.startsWith('### ')) {
-        elements.push(
-          <div key={`h3-${i}`} className="font-semibold text-sm md:text-base mt-2 mb-1">
-            {trimmed.replace(/^###\s+/, '')}
-          </div>
-        )
-        i += 1
-        continue
-      }
-
-      // 테이블 블록 처리: 연속된 '|' 시작 라인 수집
-      if (trimmed.startsWith('|')) {
-        const tableLines: string[] = []
-        while (i < lines.length && lines[i].trim().startsWith('|')) {
-          tableLines.push(lines[i].trim())
-          i += 1
-        }
-
-        if (tableLines.length >= 2) {
-          const headerCells = tableLines[0]
-            .split('|')
-            .map((c) => c.trim())
-            .filter((c) => c.length > 0)
-
-          // 본문 행: 구분선(---) 라인 제거
-          const bodyLines = tableLines.slice(1).filter((row) => !/^\|?\s*[-: ]+\s*(\|\s*[-: ]+\s*)+\|?$/.test(row))
-
-          elements.push(
-            <div key={`table-${i}`} className="overflow-x-auto my-2">
-              <table className="w-full border-collapse text-[11px] md:text-sm">
-                <thead>
-                  <tr>
-                    {headerCells.map((cell, idx) => (
-                      <th key={`th-${idx}`} className="border px-2 py-1 bg-muted/50 text-left">
-                        {cell}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {bodyLines.map((row, rIdx) => {
-                    const cells = row
-                      .split('|')
-                      .map((c) => c.trim())
-                      .filter((c) => c.length > 0)
-                    return (
-                      <tr key={`tr-${rIdx}`}> 
-                        {cells.map((c, cIdx) => (
-                          <td key={`td-${rIdx}-${cIdx}`} className="border px-2 py-1 align-top">
-                            {c}
-                          </td>
-                        ))}
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )
-          continue
-        }
-      }
-
-      // 일반 문단: 다음 빈 줄 전까지 묶어서 출력
-      const para: string[] = []
-      while (i < lines.length && lines[i].trim().length > 0 && !lines[i].trim().startsWith('|')) {
-        para.push(lines[i])
-        i += 1
-      }
-      if (para.length > 0) {
-        elements.push(
-          <div key={`p-${i}`} className="whitespace-pre-wrap text-xs md:text-sm leading-snug">
-            {para.join('\n')}
-          </div>
-        )
-      }
-    }
-
-    return <>{elements}</>
+    return (
+      <div className="whitespace-pre-wrap text-xs md:text-sm leading-snug">
+        {text}
+      </div>
+    )
   }
 
   // 새 메시지가 추가될 때마다 스크롤을 맨 아래로 이동
